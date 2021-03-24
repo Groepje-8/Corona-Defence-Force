@@ -1,0 +1,2 @@
+background 30, 30, 36
+foreGround 146, 20, 12

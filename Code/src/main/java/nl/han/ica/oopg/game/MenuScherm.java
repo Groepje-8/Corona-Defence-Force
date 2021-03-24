@@ -7,6 +7,8 @@ import nl.han.ica.oopg.objects.TextObject;
 
 public class MenuScherm {
 	private TextObject dashboardText;
+	private Knop instellingenKnop;
+	private Knoppen menuDashboard;
 	private final int xSpelKnop = 0;
 	private final int ySpelKnop = 0;
 	private final int xInstellingenKnop = 200;
@@ -20,22 +22,34 @@ public class MenuScherm {
 	public MenuScherm(){
 		fontSize = 20;
 		fontSizeInstellingen = 15;
+		createInstellingenKnop();
+		createDashboard();
 	}
 	
-	public Dashboard createSpelStartKnop() {
-		Dashboard dashboard = new Dashboard(xSpelKnop, ySpelKnop, buttonWidth, buttonHeight);
-        dashboardText = new TextObject(" Start Spel ", fontSize);
-        dashboard.addGameObject(dashboardText);
-		return dashboard;
+	public void gaNaarSpelScherm() {
+		
 	}
 	
-	public Dashboard createInstellingenKnop() {
-		Dashboard dashboard = new Dashboard(xInstellingenKnop, yInstellingenKnop, buttonWidth, buttonHeight);
-        dashboardText = new TextObject(" Start Spel ", fontSize);
-        dashboard.addGameObject(dashboardText);
-		return dashboard;
+	public void gaNaarInstellingenScherm() {
+		
+	}
+	public Knoppen getDashboard() {
+		return menuDashboard;
 	}
 	
+	public void createDashboard() {
+		menuDashboard = new Knoppen(0, 0, 1280, 600);
+		menuDashboard.addKnop(instellingenKnop,100);
+	
+
+	}
+	public void createInstellingenKnop() {
+
+		instellingenKnop = new Knop(xInstellingenKnop, yInstellingenKnop, buttonWidth, buttonHeight,
+				"Instellingen");
+		instellingenKnop.setForeColor(146, 20, 12, 255);
+
+	}
 	public Sprite createInstructieSheetBG() {
 		Sprite instructieSheetBG = new Sprite(Spel.MEDIA_URL.concat("instructieSheet.jpg"));
 		return instructieSheetBG;
