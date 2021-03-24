@@ -22,14 +22,6 @@ public class MenuScherm {
 		fontSizeInstellingen = 15;
 	}
 	
-	public void gaNaarSpelScherm() {
-		
-	}
-	
-	public void gaNaarInstellingenScherm() {
-		
-	}
-	
 	public Dashboard createSpelStartKnop() {
 		Dashboard dashboard = new Dashboard(xSpelKnop, ySpelKnop, buttonWidth, buttonHeight);
         dashboardText = new TextObject(" Start Spel ", fontSize);
