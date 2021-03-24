@@ -1,4 +1,4 @@
-package nl.han.ica.oopg;
+package nl.han.ica.oopg.game;
 
 import java.util.ArrayList;
 
