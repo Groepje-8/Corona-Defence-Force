@@ -4,6 +4,7 @@ import nl.han.ica.oopg.objects.Sprite;
 
 public class WegTile extends Tile {
 	private WegTile volgendeWeg;
+	private boolean laatsteWeg = false;
 	
 	public WegTile(Sprite sprite) {
 		super(sprite);
@@ -15,5 +16,9 @@ public class WegTile extends Tile {
 	
 	public void setVolgendeWeg(WegTile volgendeWeg) {
 		this.volgendeWeg = volgendeWeg;
+	}
+	
+	public void setLaatsteWegTrue() {
+		laatsteWeg = true;
 	}
 }
