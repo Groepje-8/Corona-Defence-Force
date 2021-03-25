@@ -45,7 +45,6 @@ public class Vijand extends SpriteObject implements ICollidableWithTiles {
 			System.out.println("Succes");
 		}
 		
-		
 	}
 	
 	private int[] getDirectionChangeBox(int x, int y) {

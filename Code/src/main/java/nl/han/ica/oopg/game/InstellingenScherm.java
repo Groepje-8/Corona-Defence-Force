@@ -14,12 +14,12 @@ public class InstellingenScherm {
 	public Knop muziekKnop;
 	public Knop geluidsKnop;
 	public Knop backKnop;
-	private final int xGeluidKnop = 590;
+	private final int xGeluidKnop = 570;
 	private final int yGeluidKnop = 250;
-	private final int xMuziekKnop = 590;
-	private final int yMuziekKnop = 300;
-	private final int xBackKnop = 590;
-	private final int yBackKnop = 350;
+	private final int xMuziekKnop = 570;
+	private final int yMuziekKnop = 350;
+	private final int xBackKnop = 570;
+	private final int yBackKnop = 450;
 	private final int buttonWidth = 100;
 	private final int buttonHeight = 100;
 	private int fontSize;
