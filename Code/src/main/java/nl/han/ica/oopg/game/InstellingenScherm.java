@@ -88,12 +88,11 @@ public class InstellingenScherm {
 	public void soundHandler(GameEngine engine,Sound sound) {
 		if (!isMuziekAan) {
 			if (!sound.isPlaying()) {
-				sound.loop(-1);
+				sound.play();// maak looping als hij na 1x stopt (nog niet getest)
 				setMuziek();
 			}
 		} else {
 			sound.pause();
-			//sound.rewind();
 			setMuziek();
 
 		}

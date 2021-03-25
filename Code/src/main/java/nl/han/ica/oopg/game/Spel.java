@@ -95,10 +95,12 @@ public class Spel extends GameEngine {
 			break;
 
 		case SCORESCHERM:
+			
 
 			break;
 
 		case SPELSCHERM:
+			state = SCORESCHERM;
 
 			break;
 
@@ -249,20 +251,24 @@ public class Spel extends GameEngine {
 			for(GameObject i:dashboard.getGameObjects()) {
 				
 				if (mouseX > i.getX() && mouseX < (i.getX()+i.getWidth()) && mouseY > i.getY() && mouseY < (i.getY()+i.getHeight())){
+					
+					
 					if (i.equals(instellingenScherm.muziekKnop)) {
 					instellingenScherm.soundHandler(this,backgroundSound);
 					
 					dashboard.refresh(instellingenScherm.muziekKnop);
 					dashboard.update();
 					
-					}
+					} else {
 					if (i.equals(instellingenScherm.geluidsKnop)) {
 						
+					}
 					}
 					if (i.equals(instellingenScherm.backKnop)) {
 						state = MENUSCHERM;
 						bepaalScherm();
 					}
+					
 				}
 				
 			}
