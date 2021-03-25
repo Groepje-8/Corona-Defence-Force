@@ -28,6 +28,7 @@ public class Knop extends GameObject {
 		g.textAlign(g.LEFT, g.TOP);
 		g.textSize(fontSize);
 		g.text(text, x, y);
+		
 	
 		
 

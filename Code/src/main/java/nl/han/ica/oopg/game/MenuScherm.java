@@ -7,12 +7,12 @@ import nl.han.ica.oopg.objects.TextObject;
 
 public class MenuScherm {
 	private TextObject dashboardText;
-	private Knop instellingenKnop;
-	private Knop startKnop;
+	public Knop instellingenKnop;
+	public Knop startKnop;
 	private Knoppen menuDashboard;
-	private final int xStartKnop = 0;
-	private final int yStartKnop = 0;
-	private final int xInstellingenKnop = 200;
+	private final int xStartKnop = 590;
+	private final int yStartKnop = 250;
+	private final int xInstellingenKnop = 590;
 	private final int yInstellingenKnop = 200;
 	private final int buttonWidth = 100;
 	private final int buttonHeight = 100;

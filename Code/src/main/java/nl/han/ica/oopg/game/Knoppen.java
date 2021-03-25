@@ -17,5 +17,16 @@ public class Knoppen extends Dashboard {
 		this.addGameObject(knop,layerPosition);
 	}
 	
+	public void refresh(Knop knop) {
+		for(Knop i :knoppenLijst) {
+			if (i.equals(knop)) {
+				i = knop;
+			}
+		}
+	}
+	public ArrayList<Knop> getKnoppen(){
+		return knoppenLijst;
+	}
+	
 	
 }

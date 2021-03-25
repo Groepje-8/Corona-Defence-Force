@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import nl.han.ica.oopg.dashboard.Dashboard;
 import nl.han.ica.oopg.engine.GameEngine;
+import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.TextObject;
+import nl.han.ica.oopg.sound.Sound;
 import nl.han.ica.oopg.view.View;
-import nl.han.ica.oopg.game.instellingenScherm;
+import nl.han.ica.oopg.game.InstellingenScherm;
 
 @SuppressWarnings("serial")
 public class Spel extends GameEngine {
@@ -18,10 +20,12 @@ public class Spel extends GameEngine {
 	private final int SCORESCHERM = 2;
 	private final int SPELSCHERM = 3;
 	private int state = MENUSCHERM;
-	private instellingenScherm instellingenScherm;
+	private InstellingenScherm instellingenScherm;
 	private MenuScherm menuScherm;
-	private Dashboard dashboard;
+	private Knoppen dashboard;
 	private TextObject dashboardText;
+	public Sound backgroundSound;
+	
 	int worldWidth = 1280;
 	int worldHeight = 720;
 
@@ -41,8 +45,9 @@ public class Spel extends GameEngine {
 
 	@Override
 	public void setupGame() {
-		instellingenScherm = new instellingenScherm(this);
+		instellingenScherm = new InstellingenScherm();
 		menuScherm = new MenuScherm();
+		backgroundSound = new Sound(this, "/media/8bitmusic.mp3");
 		View view = new View(worldWidth, worldHeight);
 		setView(view);
 		size(worldWidth, worldHeight);
@@ -84,7 +89,7 @@ public class Spel extends GameEngine {
 
 			dashboard = instellingenScherm.getDashboard();
 			dashboard.draw(g);
-			instellingenScherm.initializeSound(this);
+			
 
 			break;
 
@@ -130,13 +135,46 @@ public class Spel extends GameEngine {
 	}
 
 	public void mousePressed() {
-		if (state == MENUSCHERM) {
-			if (mouseX > to.getX() && mouseX < (to.getX() + to.getWidth()) && mouseY > to.getY()
-					&& mouseX < (to.getY() + to.getHeight())) {
-				state = INSTELLINGENSCHERM;
-				bepaalScherm();
+		// kijk naar dashboard in menuscherm.
+		if (state == MENUSCHERM) {		
+			for(GameObject i:dashboard.getGameObjects()) {
+				if (mouseX > i.getX() && mouseX < (i.getX()+i.getWidth()) && mouseY > i.getY() && mouseY < (i.getY()+i.getHeight())){
+					if (i.equals(menuScherm.instellingenKnop)) {
+						state = INSTELLINGENSCHERM;
+						bepaalScherm();
+					}
+					if (i.equals(menuScherm.startKnop)) {
+						state = SPELSCHERM;
+						bepaalScherm();
+					}
+					
+				}
 			}
 		}
+		// kijk naar dashboard in instellingenScherm.
+		if (state == INSTELLINGENSCHERM) {		
+			for(GameObject i:dashboard.getGameObjects()) {
+				
+				if (mouseX > i.getX() && mouseX < (i.getX()+i.getWidth()) && mouseY > i.getY() && mouseY < (i.getY()+i.getHeight())){
+					if (i.equals(instellingenScherm.muziekKnop)) {
+					instellingenScherm.soundHandler(this,backgroundSound);
+					
+					dashboard.refresh(instellingenScherm.muziekKnop);
+					dashboard.update();
+					
+					}
+					if (i.equals(instellingenScherm.geluidsKnop)) {
+						
+					}
+					if (i.equals(instellingenScherm.backKnop)) {
+						state = MENUSCHERM;
+						bepaalScherm();
+					}
+				}
+				
+			}
+		}
+		
 //		if (state == MENUSCHERM) {
 //			state = INSTELLINGENSCHERM;
 //
