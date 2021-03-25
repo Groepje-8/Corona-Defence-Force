@@ -7,6 +7,7 @@ import nl.han.ica.oopg.engine.GameEngine;
 import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.TextObject;
 import nl.han.ica.oopg.sound.Sound;
+import nl.han.ica.oopg.tile.TileType;
 import nl.han.ica.oopg.view.View;
 import nl.han.ica.oopg.game.InstellingenScherm;
 
@@ -105,7 +106,99 @@ public class Spel extends GameEngine {
 			break;
 		}
 	}
+	
+	public void addDashboard() {
+		Dashboard dashboard = new Dashboard(0, 0, worldWidth, 300);
+		dashboardText = new TextObject("hi", 12);
+		dashboard.addGameObject(dashboardText);
+		addDashboard(dashboard);
 
+	}
+
+	private void initializeTileMap() {
+
+		Sprite wegSprite = new Sprite(Spel.MEDIA_URL.concat("wegSprite.png"));
+		Sprite grasSprite = new Sprite(Spel.MEDIA_URL.concat("grasSprite.png"));
+		Sprite supermarktSprite = new Sprite(Spel.MEDIA_URL.concat("jumbo.png"));
+
+		TileType<WegTile> wegTileType = new TileType<>(WegTile.class, wegSprite);
+		TileType<GrasTile> grasTileType = new TileType<>(GrasTile.class, grasSprite);
+		TileType<SupermarktTile> supermarktTileType = new TileType<>(SupermarktTile.class, supermarktSprite);
+
+		TileType[] tileTypes = { wegTileType, grasTileType, supermarktTileType };
+		int tileSize = 64;
+		int tilesMap[][] = { 
+				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }, 
+				{ 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 }, 
+				{ 1, 2, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0 },
+				{ 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1 }, 
+				{ 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1 }, 
+				{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
+				{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 }, 
+				{ 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1 },
+				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }, 
+				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
+				};
+		tileMap = new TileMap(tileSize, tileTypes, tilesMap);
+		initializeTileRoute();
+	}
+	
+	
+	public void initializeTileRoute() {
+		setNextTile(14, 2);
+		setNextTile(13, 2);
+		setNextTile(13, 3);
+		setNextTile(13, 4);
+		setNextTile(13, 5);
+		setNextTile(13, 6);
+		setNextTile(13, 7);
+		setNextTile(12, 7);
+		setNextTile(11, 7);
+		setNextTile(10, 7);
+		setNextTile(9, 7);
+		setNextTile(9, 6);
+		setNextTile(9, 5);
+		setNextTile(9, 4);
+		setNextTile(10, 4);
+		setNextTile(11, 4);
+		setNextTile(11, 3);
+		setNextTile(11, 2);
+		setNextTile(11, 1);
+		setNextTile(10, 1);
+		setNextTile(9, 1);
+		setNextTile(8, 1);
+		setNextTile(7, 1);
+		setNextTile(6, 1);
+		setNextTile(5, 1);
+		setNextTile(4, 1);
+		setNextTile(4, 2);
+		setNextTile(4, 3);
+		setNextTile(4, 4);
+		setNextTile(5, 4);
+		setNextTile(6, 4);
+		setNextTile(6, 5);
+		setNextTile(6, 6);
+		setNextTile(6, 7);
+		setNextTile(5, 7);
+		setNextTile(4, 7);
+		setNextTile(3, 7);
+		setNextTile(2, 7);
+		setNextTile(1, 7);
+		setNextTile(1, 6);
+		setNextTile(1, 5);
+		setNextTile(1, 4);
+		setNextTile(1, 3);
+		((WegTile) tileMap.getTileOnIndex(vorigeX, vorigeY)).setLaatsteWegTrue();
+	}
+	int vorigeX = 15;
+	int vorigeY = 2;
+	public void setNextTile(int nieuweX, int nieuweY) {
+		((WegTile) tileMap.getTileOnIndex(vorigeX, vorigeY)).setVolgendeWeg(((WegTile) tileMap.getTileOnIndex(nieuweX, nieuweY)));
+		
+		vorigeX = nieuweX;
+	    vorigeY = nieuweY;
+	}
+	
 	public void nieuweGolf() {
 
 	}
