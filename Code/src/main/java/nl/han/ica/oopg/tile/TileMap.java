@@ -156,7 +156,7 @@ public class TileMap {
      * @return The instance of the tile on the given position
      */
     public Tile getTileOnPosition(int x, int y) {
-        return getTileOnIndex(x / tileSize, y / tileSize);
+        return getTileOnIndex(x / tileSize, (y - yOffset) / tileSize);
     }
 
     /**
@@ -231,14 +231,8 @@ public class TileMap {
     public PVector getTilePixelLocation(Tile tile) {
         PVector tileIndex = getTileIndex(tile);
         
-        return new PVector(tileIndex.x * tileSize, tileIndex.y * tileSize);
+        return new PVector(tileIndex.x * tileSize, tileIndex.y * tileSize + yOffset);
     }
+    
 }
-
-
-
-
-
-
-
 

@@ -44,8 +44,8 @@ public class Spel extends GameEngine {
 //	private ArrayList<Projectiel> projectielen;
 //	private Verdediger geselecteerdeVerdediger;
 	
-	int vijandSpawnX = 1024;
-	int vijandSpawnY = 208;
+	int vijandSpawnX = 960 + 16;
+	int vijandSpawnY = 208 + 16;
 	
 	public static void main(String[] args) {
 		Spel spel = new Spel();
@@ -64,9 +64,6 @@ public class Spel extends GameEngine {
 		view.setBackground(30, 30, 36);
 
 		bepaalScherm();
-		
-		vijanden.add(new Relschopper());
-		addGameObject(vijanden.get(0), vijandSpawnX, vijandSpawnY);
 	}
 
 	@Override
@@ -84,7 +81,7 @@ public class Spel extends GameEngine {
 			
 			break;
 		case SPELSCHERM:
-			
+
 			break;
 		}
 		
@@ -117,6 +114,8 @@ public class Spel extends GameEngine {
 		case SPELSCHERM:
 			//state = SCORESCHERM;
 			initializeTileMap();
+			vijanden.add(new Relschopper(tileMap, this));
+			addGameObject(vijanden.get(0), vijandSpawnX, vijandSpawnY);
 			break;
 
 		default:
@@ -153,61 +152,10 @@ public class Spel extends GameEngine {
 		initializeTileRoute();
 	}
 	
-	
 	public void initializeTileRoute() {
-		setNextTile(14, 2);
-		setNextTile(13, 2);
-		setNextTile(13, 3);
-		setNextTile(13, 4);
-		setNextTile(13, 5);
-		setNextTile(13, 6);
-		setNextTile(13, 7);
-		setNextTile(12, 7);
-		setNextTile(11, 7);
-		setNextTile(10, 7);
-		setNextTile(9, 7);
-		setNextTile(9, 6);
-		setNextTile(9, 5);
-		setNextTile(9, 4);
-		setNextTile(10, 4);
-		setNextTile(11, 4);
-		setNextTile(11, 3);
-		setNextTile(11, 2);
-		setNextTile(11, 1);
-		setNextTile(10, 1);
-		setNextTile(9, 1);
-		setNextTile(8, 1);
-		setNextTile(7, 1);
-		setNextTile(6, 1);
-		setNextTile(5, 1);
-		setNextTile(4, 1);
-		setNextTile(4, 2);
-		setNextTile(4, 3);
-		setNextTile(4, 4);
-		setNextTile(5, 4);
-		setNextTile(6, 4);
-		setNextTile(6, 5);
-		setNextTile(6, 6);
-		setNextTile(6, 7);
-		setNextTile(5, 7);
-		setNextTile(4, 7);
-		setNextTile(3, 7);
-		setNextTile(2, 7);
-		setNextTile(1, 7);
-		setNextTile(1, 6);
-		setNextTile(1, 5);
-		setNextTile(1, 4);
-		setNextTile(1, 3);
-		((WegTile) tileMap.getTileOnIndex(vorigeX, vorigeY)).setLaatsteWegTrue();
+		((WegTile) tileMap.getTileOnIndex(13, 2)).setRichting(3);
 	}
-	int vorigeX = 15;
-	int vorigeY = 2;
-	public void setNextTile(int nieuweX, int nieuweY) {
-		((WegTile) tileMap.getTileOnIndex(vorigeX, vorigeY)).setVolgendeWeg(((WegTile) tileMap.getTileOnIndex(nieuweX, nieuweY)));
-		
-		vorigeX = nieuweX;
-	    vorigeY = nieuweY;
-	}
+	
 	
 	public void nieuweGolf() {
 
