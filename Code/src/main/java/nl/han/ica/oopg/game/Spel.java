@@ -30,13 +30,13 @@ public class Spel extends GameEngine {
 	private int state = MENUSCHERM;
 	private InstellingenScherm instellingenScherm;
 	private MenuScherm menuScherm;
-	private Knoppen dashboard;
+	private Dashboard dashboard;
 	private TextObject dashboardText;
+	private BuildScreen buildScreen;
 	public Sound backgroundSound;
-	
+
 	int worldWidth = 1280;
 	int worldHeight = 720;
-	
 
 	private int levens, tijd, geld;
 //	private ArrayList<Verdediger> verdedigers;
@@ -57,7 +57,9 @@ public class Spel extends GameEngine {
 	public void setupGame() {
 		instellingenScherm = new InstellingenScherm();
 		menuScherm = new MenuScherm();
-		backgroundSound = new Sound(this, "C:\\Users\\levig\\OneDrive\\Documents\\GitHub\\Corona-Defence-Force\\Code\\src\\main\\java\\media\\8bitmusic.mp3");
+		buildScreen = new BuildScreen();
+		backgroundSound = new Sound(this, "/media/8bitmusic.mp3");
+
 		View view = new View(worldWidth, worldHeight);
 		setView(view);
 		size(worldWidth, worldHeight);
@@ -74,12 +76,17 @@ public class Spel extends GameEngine {
 		// TODO Auto-generated method stub
 		switch (state) {
 		case MENUSCHERM:
-			
+
 			dashboard.draw(g);
-			
+
+			break;
+
+		case INSTELLINGENSCHERM:
+			dashboard.draw(g);
+
 			break;
 			
-		case INSTELLINGENSCHERM:
+		case SPELSCHERM:
 			dashboard.draw(g);
 			
 			break;
@@ -105,18 +112,24 @@ public class Spel extends GameEngine {
 
 			dashboard = instellingenScherm.getDashboard();
 			dashboard.draw(g);
-			
 
 			break;
 
 		case SCORESCHERM:
-			
 
 			break;
 
 		case SPELSCHERM:
 			//state = SCORESCHERM;
 			initializeTileMap();
+//			buildScreen.getBuildScreen().draw(g);
+			dashboard = buildScreen.getBuildScreen();
+			for(GameObject i : buildScreen.Verdedigers) {
+				addGameObject(i,buildScreen.getX(),0);
+			}
+			dashboard.draw(g);
+			
+
 			break;
 
 		default:
@@ -124,6 +137,14 @@ public class Spel extends GameEngine {
 		}
 	}
 	
+
+	public void addDashboard() {
+		Dashboard dashboard = new Dashboard(0, 0, worldWidth, 300);
+		dashboardText = new TextObject("hi", 12);
+		dashboard.addGameObject(dashboardText);
+		addDashboard(dashboard);
+
+	}
 
 	private void initializeTileMap() {
 
@@ -137,23 +158,16 @@ public class Spel extends GameEngine {
 
 		TileType[] tileTypes = { wegTileType, grasTileType, supermarktTileType };
 		int tileSize = 64;
-		int tilesMap[][] = { 
-				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }, 
-				{ 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 }, 
-				{ 1, 2, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0 },
-				{ 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1 }, 
-				{ 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1 }, 
-				{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
-				{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 }, 
-				{ 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1 },
-				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }, 
-				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
-				};
+		int tilesMap[][] = { { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+				{ 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 }, { 1, 2, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0 },
+				{ 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1 }, { 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1 },
+				{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 }, { 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
+				{ 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1 }, { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
 		tileMap = new TileMap(tileSize, tileTypes, tilesMap);
 		initializeTileRoute();
 	}
-	
-	
+
 	public void initializeTileRoute() {
 		setNextTile(14, 2);
 		setNextTile(13, 2);
@@ -200,15 +214,18 @@ public class Spel extends GameEngine {
 		setNextTile(1, 3);
 		((WegTile) tileMap.getTileOnIndex(vorigeX, vorigeY)).setLaatsteWegTrue();
 	}
+
 	int vorigeX = 15;
 	int vorigeY = 2;
+
 	public void setNextTile(int nieuweX, int nieuweY) {
-		((WegTile) tileMap.getTileOnIndex(vorigeX, vorigeY)).setVolgendeWeg(((WegTile) tileMap.getTileOnIndex(nieuweX, nieuweY)));
-		
+		((WegTile) tileMap.getTileOnIndex(vorigeX, vorigeY))
+				.setVolgendeWeg(((WegTile) tileMap.getTileOnIndex(nieuweX, nieuweY)));
+
 		vorigeX = nieuweX;
-	    vorigeY = nieuweY;
+		vorigeY = nieuweY;
 	}
-	
+
 	public void nieuweGolf() {
 
 	}
@@ -218,14 +235,6 @@ public class Spel extends GameEngine {
 	}
 
 	public void plaatsNieuweVerdediger() {
-
-	}
-
-	public void addDashboard() {
-		Dashboard dashboard = new Dashboard(0, 0, worldWidth, 300);
-		dashboardText = new TextObject("hi", 12);
-		dashboard.addGameObject(dashboardText);
-		addDashboard(dashboard);
 
 	}
 
@@ -239,9 +248,10 @@ public class Spel extends GameEngine {
 
 	public void mousePressed() {
 		// kijk naar dashboard in menuscherm.
-		if (state == MENUSCHERM) {		
-			for(GameObject i:dashboard.getGameObjects()) {
-				if (mouseX > i.getX() && mouseX < (i.getX()+i.getWidth()) && mouseY > i.getY() && mouseY < (i.getY()+i.getHeight())){
+		if (state == MENUSCHERM) {
+			for (GameObject i : dashboard.getGameObjects()) {
+				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
+						&& mouseY < (i.getY() + i.getHeight())) {
 					if (i.equals(menuScherm.instellingenKnop)) {
 						state = INSTELLINGENSCHERM;
 						bepaalScherm();
@@ -250,49 +260,55 @@ public class Spel extends GameEngine {
 						state = SPELSCHERM;
 						bepaalScherm();
 					}
-					
+
 				}
 			}
 		}
 		// kijk naar dashboard in instellingenScherm.
-		if (state == INSTELLINGENSCHERM) {		
-			for(GameObject i:dashboard.getGameObjects()) {
-				
-				if (mouseX > i.getX() && mouseX < (i.getX()+i.getWidth()) && mouseY > i.getY() && mouseY < (i.getY()+i.getHeight())){
-					
-					
-					if (i.equals(instellingenScherm.muziekKnop)) {
-					instellingenScherm.soundHandler(this,backgroundSound);
-					
-					dashboard.refresh(instellingenScherm.muziekKnop);
-					dashboard.update();
-					
-					} else {
-					if (i.equals(instellingenScherm.geluidsKnop)) {
-						
-					}
-					}
+		if (state == INSTELLINGENSCHERM) {
+			for (GameObject i : dashboard.getGameObjects()) {
+
+				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
+						&& mouseY < (i.getY() + i.getHeight())) {
+
 					if (i.equals(instellingenScherm.backKnop)) {
 						state = MENUSCHERM;
 						bepaalScherm();
 					}
-					
+
+					if (i.equals(instellingenScherm.geluidsKnop)) {
+
+					}
+
+					if (i.equals(instellingenScherm.muziekKnop)) {
+						instellingenScherm.soundHandler(this, backgroundSound);
+
+					}
+
 				}
-				
+
 			}
 		}
-		
-//		if (state == MENUSCHERM) {
-//			state = INSTELLINGENSCHERM;
-//
-//			bepaalScherm();
-//
-//		} else {
-//			state = MENUSCHERM;
-//
-//			bepaalScherm();
-//		}
+	
+		if(state == SPELSCHERM) {
+			
+		}
 
+	}
+
+	public void mouseHover() {
+		for (GameObject i : dashboard.getGameObjects()) {
+			if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
+					&& mouseY < (i.getY() + i.getHeight())) {
+//		       for(Knop j : dashboard.getKnoppen()) {
+//		    	   if (i==j) {
+		    		  // j.setForeColor(255,255,255,255);
+		    		   i.draw(g);
+		    		   System.out.println("jeej");
+//		    	   }
+//		       }
+			}
+		}
 	}
 
 }
