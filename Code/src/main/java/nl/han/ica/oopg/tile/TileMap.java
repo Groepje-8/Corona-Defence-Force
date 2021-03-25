@@ -17,7 +17,7 @@ public class TileMap {
     private TileType[] tileTypes;
     private Sprite emptySprite = new Sprite(new PImage(0, 0));
     private TileType<EmptyTile> emptyTileTileType = new TileType<>(EmptyTile.class, emptySprite);
-
+    private int yOffset = 80;
     /**
      * Create a new TileMap.
      * @param tileSize The size the tiles will be.
@@ -132,7 +132,7 @@ public class TileMap {
         if (tileMap != null && indexMap != null) {
             for (int i = 0; i < tileMap.length; i++) {
                 for (int j = 0; j < tileMap[i].length; j++) {
-                    pGraphics.image(tileMap[i][j].getSprite().getPImage(), j * tileSize, i * tileSize);
+                    pGraphics.image(tileMap[i][j].getSprite().getPImage(), j * tileSize, i * tileSize + yOffset);
                 }
             }
         }

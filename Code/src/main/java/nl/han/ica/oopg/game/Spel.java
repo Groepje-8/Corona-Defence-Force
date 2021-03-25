@@ -5,16 +5,23 @@ import java.util.ArrayList;
 import nl.han.ica.oopg.dashboard.Dashboard;
 import nl.han.ica.oopg.engine.GameEngine;
 import nl.han.ica.oopg.objects.GameObject;
+import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.objects.TextObject;
 import nl.han.ica.oopg.sound.Sound;
+import nl.han.ica.oopg.tile.GrasTile;
+import nl.han.ica.oopg.tile.SupermarktTile;
+import nl.han.ica.oopg.tile.TileMap;
 import nl.han.ica.oopg.tile.TileType;
+import nl.han.ica.oopg.tile.WegTile;
 import nl.han.ica.oopg.view.View;
+import nl.han.ica.oopg.vijand.Relschopper;
+import nl.han.ica.oopg.vijand.Vijand;
 import nl.han.ica.oopg.game.InstellingenScherm;
 
 @SuppressWarnings("serial")
 public class Spel extends GameEngine {
 
-	public static String MEDIA_URL = "src/main/java/party/game/tutorial/media/";
+	public static String MEDIA_URL = "src/main/java/media/";
 
 	private final int MENUSCHERM = 0;
 	private final int INSTELLINGENSCHERM = 1;
@@ -29,15 +36,17 @@ public class Spel extends GameEngine {
 	
 	int worldWidth = 1280;
 	int worldHeight = 720;
-
+	
 
 	private int levens, tijd, geld;
 //	private ArrayList<Verdediger> verdedigers;
-//	private ArrayList<Vijand> vijand;
+	private ArrayList<Vijand> vijanden = new ArrayList<>();
 //	private ArrayList<Projectiel> projectielen;
-//	private Map map;
 //	private Verdediger geselecteerdeVerdediger;
-
+	
+	int vijandSpawnX = 1024;
+	int vijandSpawnY = 208;
+	
 	public static void main(String[] args) {
 		Spel spel = new Spel();
 		spel.runSketch();
@@ -48,14 +57,16 @@ public class Spel extends GameEngine {
 	public void setupGame() {
 		instellingenScherm = new InstellingenScherm();
 		menuScherm = new MenuScherm();
-		backgroundSound = new Sound(this, "/media/8bitmusic.mp3");
+		backgroundSound = new Sound(this, "C:\\Users\\levig\\OneDrive\\Documents\\GitHub\\Corona-Defence-Force\\Code\\src\\main\\java\\media\\8bitmusic.mp3");
 		View view = new View(worldWidth, worldHeight);
 		setView(view);
 		size(worldWidth, worldHeight);
 		view.setBackground(30, 30, 36);
 
 		bepaalScherm();
-
+		
+		vijanden.add(new Relschopper());
+		addGameObject(vijanden.get(0), vijandSpawnX, vijandSpawnY);
 	}
 
 	@Override
@@ -72,7 +83,11 @@ public class Spel extends GameEngine {
 			dashboard.draw(g);
 			
 			break;
+		case SPELSCHERM:
+			
+			break;
 		}
+		
 
 	}
 
@@ -100,8 +115,8 @@ public class Spel extends GameEngine {
 			break;
 
 		case SPELSCHERM:
-			state = SCORESCHERM;
-
+			//state = SCORESCHERM;
+			initializeTileMap();
 			break;
 
 		default:
@@ -109,13 +124,6 @@ public class Spel extends GameEngine {
 		}
 	}
 	
-	public void addDashboard() {
-		Dashboard dashboard = new Dashboard(0, 0, worldWidth, 300);
-		dashboardText = new TextObject("hi", 12);
-		dashboard.addGameObject(dashboardText);
-		addDashboard(dashboard);
-
-	}
 
 	private void initializeTileMap() {
 
