@@ -1,4 +1,4 @@
-package nl.han.ica.oopg.game;
+package nl.han.ica.oopg.verdediger;
 
 public interface IAanval {
 	

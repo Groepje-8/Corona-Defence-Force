@@ -1,6 +1,6 @@
 package nl.han.ica.oopg;
 
-import nl.han.ica.oopg.game.Knop;
+import nl.han.ica.oopg.screens.Knop;
 
 public class MenuScherm {
 	private final int xInstellingenKnop = 0;
