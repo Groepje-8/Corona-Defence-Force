@@ -16,6 +16,7 @@ import nl.han.ica.oopg.tile.WegTile;
 import nl.han.ica.oopg.view.View;
 import nl.han.ica.oopg.vijand.Relschopper;
 import nl.han.ica.oopg.vijand.Vijand;
+import nl.han.ica.oopg.vijand.VijandSpawner;
 import nl.han.ica.oopg.game.InstellingenScherm;
 
 @SuppressWarnings("serial")
@@ -40,12 +41,11 @@ public class Spel extends GameEngine {
 
 	private int levens, tijd, geld;
 //	private ArrayList<Verdediger> verdedigers;
-	private ArrayList<Vijand> vijanden = new ArrayList<>();
+//	private ArrayList<Vijand> vijanden = new ArrayList<>();
 //	private ArrayList<Projectiel> projectielen;
 //	private Verdediger geselecteerdeVerdediger;
+	VijandSpawner vijandSpawner = new VijandSpawner(this);
 	
-	int vijandSpawnX = 960 + 16;
-	int vijandSpawnY = 208 + 16;
 	
 	public static void main(String[] args) {
 		Spel spel = new Spel();
@@ -58,8 +58,8 @@ public class Spel extends GameEngine {
 		instellingenScherm = new InstellingenScherm();
 		menuScherm = new MenuScherm();
 		buildScreen = new BuildScreen();
-		//backgroundSound = new Sound(this, "/media/8bitmusic.mp3");
-		backgroundSound = new Sound(this, "C:\\Users\\Joria\\Documents\\GitHub\\Corona-Defence-Force\\Code\\src\\main\\java\\media\\8bitmusic.mp3");
+		backgroundSound = new Sound(this, MEDIA_URL.concat("8bitmusic.mp3"));
+		//backgroundSound = new Sound(this, "C:\\Users\\Joria\\Documents\\GitHub\\Corona-Defence-Force\\Code\\src\\main\\java\\media\\8bitmusic.mp3");
 
 		View view = new View(worldWidth, worldHeight);
 		setView(view);
@@ -68,7 +68,7 @@ public class Spel extends GameEngine {
 
 		bepaalScherm();
 	}
-
+	
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
@@ -86,7 +86,7 @@ public class Spel extends GameEngine {
 			
 		case SPELSCHERM:
 			dashboard.draw(g);
-			
+			vijandSpawner.checkVijandStatus();
 			break;
 
 
@@ -117,14 +117,12 @@ public class Spel extends GameEngine {
 			break;
 
 		case SPELSCHERM:
-			//state = SCORESCHERM;
 			initializeTileMap();
 
-			vijanden.add(new Relschopper(tileMap, this));
-			addGameObject(vijanden.get(0), vijandSpawnX, vijandSpawnY);
-
+			vijandSpawner.beginGolf();
+			
 //			buildScreen.getBuildScreen().draw(g);
-			// vervang dashboard met het bouw scherm loop door alle te kopen verdedigers en teken die.
+//			vervang dashboard met het bouw scherm loop door alle te kopen verdedigers en teken die.
 			dashboard = buildScreen.getBuildScreen();
 			for(GameObject i : buildScreen.Verdedigers) {
 				addGameObject(i,buildScreen.getX(),0);
@@ -144,14 +142,13 @@ public class Spel extends GameEngine {
 		dashboardText = new TextObject("hi", 12);
 		dashboard.addGameObject(dashboardText);
 		addDashboard(dashboard);
-
 	}
 
 	private void initializeTileMap() {
 
-		Sprite wegSprite = new Sprite("C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\wegSprite.png");
-		Sprite grasSprite = new Sprite("C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\grasSprite.png");
-		Sprite supermarktSprite = new Sprite("C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\jumbo.png");
+		Sprite wegSprite = new Sprite(MEDIA_URL.concat("wegSprite.png"));
+		Sprite grasSprite = new Sprite(MEDIA_URL.concat("grasSprite.png"));
+		Sprite supermarktSprite = new Sprite(MEDIA_URL.concat("jumbo.png"));
 
 		TileType<WegTile> wegTileType = new TileType<>(WegTile.class, wegSprite);
 		TileType<GrasTile> grasTileType = new TileType<>(GrasTile.class, grasSprite);
@@ -172,27 +169,14 @@ public class Spel extends GameEngine {
 				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } 
 				};
 		tileMap = new TileMap(tileSize, tileTypes, tilesMap);
-		initializeTileRoute();
 	}
 	
-	public void initializeTileRoute() {
-		((WegTile) tileMap.getTileOnIndex(13, 2)).setRichting(3);
-	}
-	
-
-	public void nieuweGolf() {
-
-	}
 
 	public void gameOver() {
 
 	}
 
 	public void plaatsNieuweVerdediger() {
-
-	}
-
-	public void setTileMap() {
 
 	}
 

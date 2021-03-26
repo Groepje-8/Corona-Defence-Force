@@ -9,29 +9,31 @@ import nl.han.ica.oopg.game.Spel;
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.objects.SpriteObject;
 import nl.han.ica.oopg.tile.SupermarktTile;
-import nl.han.ica.oopg.tile.TileMap;
-import nl.han.ica.oopg.tile.WegTile;
-import processing.core.PVector;
 
 public class Vijand extends SpriteObject implements ICollidableWithTiles {
 	private int levens, beloning;
-	private boolean levend, bevries;
-	private Sprite plaatje;
-	private double laatsteLoopTijd;
-	private TileMap tileMap;
-	Spel spel;
 	private float xMidden, yMidden;
+	private boolean levend, supermarktBereikt, bevries;
+	private double laatsteLoopTijd;
+
+	private Spel spel;
 	
-	public Vijand(int levens, int snelheid, int beloning, Sprite sprite, TileMap tileMap, Spel spel) {
+	
+	public Vijand(int levens, int snelheid, int beloning, Sprite sprite, Spel spel) {
 		super(sprite);
 		setSpeed(snelheid);
 		setDirection(270);
 		this.levens = levens;
 		this.beloning = beloning;
-		this.tileMap = tileMap;
 		this.spel = spel;
 		levend = true;
+		supermarktBereikt = false;
 		bevries = false;
+	}
+	
+	@Override
+	public void update() {
+		lopenLangsPad();
 		
 	}
 	
@@ -39,45 +41,49 @@ public class Vijand extends SpriteObject implements ICollidableWithTiles {
 		xMidden = getCenterX();
 		yMidden = getCenterY();
 		
-		int[] array = getDirectionChangeBox(13, 2);
-		if (xMidden > array[0] && xMidden < array[1] && yMidden > array[2] && yMidden < array[3]) {
-			setDirection(180);
-			System.out.println("Succes");
-		}
-		
+		changeDirectionOnCoordinates(13, 2, 180);
+		changeDirectionOnCoordinates(13, 7, 270);
+		changeDirectionOnCoordinates(9, 7, 0);
+		changeDirectionOnCoordinates(9, 4, 90);
+		changeDirectionOnCoordinates(11, 4, 0);
+		changeDirectionOnCoordinates(11, 1, 270);
+		changeDirectionOnCoordinates(4, 1, 180);
+		changeDirectionOnCoordinates(4, 4, 90);
+		changeDirectionOnCoordinates(6, 4, 180);
+		changeDirectionOnCoordinates(6, 7, 270);
+		changeDirectionOnCoordinates(1, 7, 0);
 	}
 	
-	private int[] getDirectionChangeBox(int x, int y) {
-		int[] array = {x * 64 + 31, x * 64 + 33, y * 64 + 111, y * 64 + 113};
-		
-		return array;
+	private void changeDirectionOnCoordinates(int x, int y, int richting) {
+		int[] Coordinaten = {x * 64 + 31, x * 64 + 33, y * 64 + 31, y * 64 + 33};
+		if (xMidden > Coordinaten[0] && xMidden < Coordinaten[1] && yMidden > Coordinaten[2] && yMidden < Coordinaten[3]) {
+			setDirection(richting);
+		}
 	}
 	
 	public void krijgSchade(int schade) {
 		levens -= schade;
 	}
 	
-	public void collidedWithSupermarkt() {
-		levend = false;
+	public boolean isSupermarktBereikt() {
+		return supermarktBereikt;
+	}
+	
+	public boolean isLevend() {
+		return levend;
 	}
 	
 	int getBeloning() {
 		return beloning;
 	}
 
-	@Override
-	public void update() {
-		lopenLangsPad();
-		
-	}
-
+	
 	@Override
 	public void tileCollisionOccurred(List<CollidedTile> collidedTiles) {
         for (CollidedTile ct : collidedTiles) {
             if (ct.getTile() instanceof SupermarktTile) {
                 try {
-                	levend = false;
-                	System.out.println("DOOD");
+                	supermarktBereikt = true;
                 } 
                 catch (TileNotFoundException e) {
                     e.printStackTrace();
