@@ -1,4 +1,4 @@
-package nl.han.ica.oopg.game;
+package nl.han.ica.oopg.verdediger;
 
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.objects.SpriteObject;
@@ -12,6 +12,8 @@ public class Verdediger extends SpriteObject {
 	public double laatsteAanvaltijd;
 	public double herlaadTijd;
 	public boolean bevroren;
+	public int x;
+	public int y;
 
 	Verdediger(int prijs, Sprite sprite, String naam, int radius, double laatsteAanvaltijd, double herlaadTijd) {
 		super(sprite);
@@ -20,11 +22,17 @@ public class Verdediger extends SpriteObject {
 		this.radius = radius;
 		this.laatsteAanvaltijd = laatsteAanvaltijd;
 		this.herlaadTijd = herlaadTijd;
+		resize();
 
 	}
 
+
 	public void kopen() {
 
+	}
+	private void resize() {
+		super.getImage().resize(128, 128);
+		
 	}
 
 	public PImage getSprite() {

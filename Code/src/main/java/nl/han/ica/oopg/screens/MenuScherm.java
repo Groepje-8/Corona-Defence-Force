@@ -1,6 +1,7 @@
-package nl.han.ica.oopg.game;
+package nl.han.ica.oopg.screens;
 
 import nl.han.ica.oopg.dashboard.*;
+import nl.han.ica.oopg.game.Spel;
 import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.objects.TextObject;
