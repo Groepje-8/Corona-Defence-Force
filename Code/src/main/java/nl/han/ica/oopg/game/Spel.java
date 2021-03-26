@@ -59,7 +59,7 @@ public class Spel extends GameEngine {
 		menuScherm = new MenuScherm();
 		buildScreen = new BuildScreen();
 		//backgroundSound = new Sound(this, "/media/8bitmusic.mp3");
-		backgroundSound = new Sound(this, "C:\\Users\\levig\\OneDrive\\Documents\\GitHub\\Corona-Defence-Force\\Code\\src\\main\\java\\media\\8bitmusic.mp3");
+		backgroundSound = new Sound(this, "C:\\Users\\Joria\\Documents\\GitHub\\Corona-Defence-Force\\Code\\src\\main\\java\\media\\8bitmusic.mp3");
 
 		View view = new View(worldWidth, worldHeight);
 		setView(view);
@@ -88,9 +88,8 @@ public class Spel extends GameEngine {
 			dashboard.draw(g);
 			
 			break;
-		case SPELSCHERM:
 
-			break;
+
 		}
 		
 
@@ -102,14 +101,14 @@ public class Spel extends GameEngine {
 		case MENUSCHERM:
 
 			dashboard = menuScherm.getDashboard();
-			dashboard.draw(g);
+//			dashboard.draw(g);
 
 			break;
 
 		case INSTELLINGENSCHERM:
 
 			dashboard = instellingenScherm.getDashboard();
-			dashboard.draw(g);
+//			dashboard.draw(g);
 
 			break;
 
@@ -125,11 +124,12 @@ public class Spel extends GameEngine {
 			addGameObject(vijanden.get(0), vijandSpawnX, vijandSpawnY);
 
 //			buildScreen.getBuildScreen().draw(g);
+			// vervang dashboard met het bouw scherm loop door alle te kopen verdedigers en teken die.
 			dashboard = buildScreen.getBuildScreen();
 			for(GameObject i : buildScreen.Verdedigers) {
 				addGameObject(i,buildScreen.getX(),0);
 			}
-			dashboard.draw(g);
+//			dashboard.draw(g);
 			
 			break;
 
@@ -149,9 +149,9 @@ public class Spel extends GameEngine {
 
 	private void initializeTileMap() {
 
-		Sprite wegSprite = new Sprite(Spel.MEDIA_URL.concat("wegSprite.png"));
-		Sprite grasSprite = new Sprite(Spel.MEDIA_URL.concat("grasSprite.png"));
-		Sprite supermarktSprite = new Sprite(Spel.MEDIA_URL.concat("jumbo.png"));
+		Sprite wegSprite = new Sprite("C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\wegSprite.png");
+		Sprite grasSprite = new Sprite("C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\grasSprite.png");
+		Sprite supermarktSprite = new Sprite("C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\jumbo.png");
 
 		TileType<WegTile> wegTileType = new TileType<>(WegTile.class, wegSprite);
 		TileType<GrasTile> grasTileType = new TileType<>(GrasTile.class, grasSprite);
@@ -250,19 +250,6 @@ public class Spel extends GameEngine {
 
 	}
 
-	public void mouseHover() {
-		for (GameObject i : dashboard.getGameObjects()) {
-			if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
-					&& mouseY < (i.getY() + i.getHeight())) {
-//		       for(Knop j : dashboard.getKnoppen()) {
-//		    	   if (i==j) {
-		    		  // j.setForeColor(255,255,255,255);
-		    		   i.draw(g);
-		    		   System.out.println("jeej");
-//		    	   }
-//		       }
-			}
-		}
-	}
+
 
 }
