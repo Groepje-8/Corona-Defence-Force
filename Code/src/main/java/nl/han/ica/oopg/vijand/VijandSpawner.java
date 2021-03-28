@@ -12,20 +12,20 @@ public class VijandSpawner implements IAlarmListener {
 	private Spel spel;
 	private Alarm alarm;
 	private ArrayList<Vijand> vijanden = new ArrayList<>();
-	private int tijdPerVijand = 1;
-	private int vijandSpawnX = 1028 + 16;
-	private int vijandSpawnY = 128 + 16;
-	private int vijandCounter = 0;
-	private int huidigeGolf = 0;
-	private int vijandIndex = 0;
-	private int vijandMap[][] = {
-		{0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0},
-		{0, 0, 0, 0, 0}
-	};
+	private int vijandSpawnX, vijandSpawnY, tijdTussenVijanden;
+	private int aantalGolven, huidigeGolf, vijandCounter, vijandIndex;
+	int[][] vijandMap;
 	
-	public VijandSpawner(Spel spel) {
+	public VijandSpawner(Spel spel, int[][] vijandMap, int vijandSpawnX, int vijandSpawnY, int tijdTussenVijanden) {
 		this.spel = spel;
+		this.vijandSpawnX = vijandSpawnX;
+		this.vijandSpawnY = vijandSpawnY;
+		this.tijdTussenVijanden = tijdTussenVijanden;
+		this.vijandMap = vijandMap;
+		aantalGolven = vijandMap.length;
+		huidigeGolf = 0;
+		vijandIndex = 0;
+		vijandCounter = 0;
 	}
 	
 	public void checkVijandStatus() {
@@ -46,7 +46,7 @@ public class VijandSpawner implements IAlarmListener {
 	}
 		
 	public void beginGolf() {
-		alarm = new Alarm("Nieuwe Vijand", tijdPerVijand);
+		alarm = new Alarm("Nieuwe Vijand", tijdTussenVijanden);
 	    alarm.addTarget(this);
 	    alarm.start();
 	}

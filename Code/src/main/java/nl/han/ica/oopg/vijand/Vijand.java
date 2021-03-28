@@ -15,11 +15,10 @@ public class Vijand extends SpriteObject implements ICollidableWithTiles {
 	private float xMidden, yMidden;
 	private boolean levend, supermarktBereikt, bevries;
 	private double laatsteLoopTijd;
-
 	private Spel spel;
 	
 	
-	public Vijand(int levens, int snelheid, int beloning, Sprite sprite, Spel spel) {
+	public Vijand(Spel spel, Sprite sprite, int levens, int snelheid, int beloning) {
 		super(sprite);
 		setSpeed(snelheid);
 		setDirection(270);

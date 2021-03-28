@@ -6,20 +6,18 @@ import processing.core.PImage;
 
 public class Verdediger extends SpriteObject {
 
-	public int prijs;
+	public int prijs, radius, aanvalsKracht;
+	public int x, y;
 	public String naam;
-	public int radius;
-	public double laatsteAanvaltijd;
-	public double herlaadTijd;
 	public boolean bevroren;
-	public int x;
-	public int y;
-
-	Verdediger(int prijs, Sprite sprite, String naam, int radius, double laatsteAanvaltijd, double herlaadTijd) {
+	public double laatsteAanvaltijd, herlaadTijd;
+	
+	Verdediger(Sprite sprite, int prijs, int radius, int aanvalsKracht, String naam, double laatsteAanvaltijd, double herlaadTijd) {
 		super(sprite);
 		this.prijs = prijs;
-		this.naam = naam;
 		this.radius = radius;
+		this.aanvalsKracht = aanvalsKracht;
+		this.naam = naam;
 		this.laatsteAanvaltijd = laatsteAanvaltijd;
 		this.herlaadTijd = herlaadTijd;
 		resize();
