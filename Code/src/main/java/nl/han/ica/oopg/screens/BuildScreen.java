@@ -11,7 +11,7 @@ import processing.core.PGraphics;
 
 public class BuildScreen {
 	public ArrayList<SpriteObject> Verdedigers = new ArrayList<SpriteObject>();
-	public static String MEDIA_URL = "code/src/main/java/media/";
+	public static String MEDIA_URL = "src/main/java/media/";
 	Dashboard screen;
 	private int x = 1024;
 	private int y = 0;
@@ -25,8 +25,9 @@ public class BuildScreen {
 		
 	}
 	private void fillVerdedigers() {
-		
-		PolitieAgent politieAgent = new PolitieAgent(10,"PolitieAgent",10,0,5,20);
+		Sprite sprite = new Sprite(MEDIA_URL.concat("cop.png"));
+		sprite.resize(width/2, width/2);
+		PolitieAgent politieAgent = new PolitieAgent(10,sprite,"PolitieAgent",10,0,5,20);
 		Verdedigers.add(politieAgent);
 	}
 	
