@@ -1,5 +1,9 @@
 # Corona-Defence-Force
-OOPD gameopdracht 'Corona Defence Force'
+De OOPD eindopdracht OOPG a.k.a. 'De Gameopdracht'
+Gemaakt door Jorian en Levi.
+Maakt gebruik van de Game Engine geleverd door de HAN.
+Spelen op eigen risico.
+
 
 # Trello
 [Trello locatie](https://trello.com/b/FPOyRvxq/oopd-gameopdracht-corona-defence-force)
