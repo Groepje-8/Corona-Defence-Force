@@ -1,11 +1,12 @@
 package nl.han.ica.oopg.game;
 
-
+import java.util.ArrayList;
 
 import nl.han.ica.oopg.dashboard.Dashboard;
 import nl.han.ica.oopg.engine.GameEngine;
 import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
+import nl.han.ica.oopg.objects.SpriteObject;
 import nl.han.ica.oopg.objects.TextObject;
 import nl.han.ica.oopg.screens.BuildScreen;
 import nl.han.ica.oopg.screens.InstellingenScherm;
@@ -20,14 +21,16 @@ import nl.han.ica.oopg.verdediger.PolitieAgent;
 import nl.han.ica.oopg.verdediger.Verdediger;
 import nl.han.ica.oopg.verdediger.VerdedigersLijst;
 import nl.han.ica.oopg.view.View;
+import nl.han.ica.oopg.vijand.Relschopper;
+import nl.han.ica.oopg.vijand.Vijand;
 import nl.han.ica.oopg.vijand.VijandSpawner;
-
+import nl.han.ica.oopg.screens.InstellingenScherm;
 
 @SuppressWarnings("serial")
 public class Spel extends GameEngine {
 
-	// public static String MEDIA_URL = "src/main/java/media/";
-	public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
+	public static String MEDIA_URL = "src/main/java/media/";
+	//public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
 	private final int MENUSCHERM = 0;
 	private final int INSTELLINGENSCHERM = 1;
 	private final int SCORESCHERM = 2;
@@ -37,6 +40,7 @@ public class Spel extends GameEngine {
 	private InstellingenScherm instellingenScherm;
 	private MenuScherm menuScherm;
 	private Dashboard dashboard;
+	private TextObject dashboardText;
 	private VerdedigersLijst verdedigersLijst;
 
 	private BuildScreen buildScreen;
@@ -83,7 +87,6 @@ public class Spel extends GameEngine {
 			break;
 
 		case INSTELLINGENSCHERM:
-			
 			dashboard.draw(g);
 
 			break;
@@ -96,11 +99,6 @@ public class Spel extends GameEngine {
 			}
 			verdedigersLoop();
 
-			break;
-		
-		case SCORESCHERM:
-			state = MENUSCHERM;
-			
 			break;
 
 		}
@@ -127,16 +125,15 @@ public class Spel extends GameEngine {
 			initializeVijandMap();
 
 			vijandSpawner.beginAlarmGolf();
+			
 
+
+
+//			buildScreen.getBuildScreen().draw(g);
+//			vervang dashboard met het bouw scherm loop door alle te kopen verdedigers en teken die.
 			dashboard = buildScreen.getBuildScreen();
-			for (Verdediger i : buildScreen.Verdedigers) {
+			for (GameObject i : buildScreen.Verdedigers) {
 				addGameObject(i, buildScreen.getX(), 0);
-				TextObject naam = new TextObject (i.getNaam(), 16);
-				naam.setForeColor(255,255,255,255);
-				addGameObject(naam,buildScreen.getX(), 0 + TILESIZE*2);
-				TextObject prijs = new TextObject (Integer.toString(i.getPrijs()),16);
-				prijs.setForeColor(255,255,255,255);
-				addGameObject(prijs,buildScreen.getX()+ TILESIZE * 2, 0 + TILESIZE * 2);
 			}
 
 			break;
@@ -173,22 +170,24 @@ public class Spel extends GameEngine {
 	}
 
 	public void initializeVijandMap() {
-		int vijandMap[][] = { { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 } };
-		int vijandSpawnX = 1028 + 16;
-		int vijandSpawnY = 128 + 16;
+		int vijandMap[][] = { { 0, 1, 2, 3, 4 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 } };
+		int vijandSpawnX = 15;
+		int vijandSpawnY = 2;
 		int tijdTussenVijanden = 1;
-
-		int tijdTussenGolven = 13;
-
-		vijandSpawner = new VijandSpawner(this, vijandMap, vijandSpawnX, vijandSpawnY, tijdTussenVijanden,
-				tijdTussenGolven);
+		int tijdTussenGolven = 15;
+		
+		vijandSpawner = new VijandSpawner(this, vijandMap, vijandSpawnX, vijandSpawnY, tijdTussenVijanden, tijdTussenGolven);
 	}
-
+	
 	public void ontvangSchade(int schade) {
 		levens -= schade;
 	}
 
 	public void gameOver() {
+
+	}
+
+	public void plaatsNieuweVerdediger() {
 
 	}
 
@@ -204,20 +203,15 @@ public class Spel extends GameEngine {
 					.get(i).herlaadTijd) {
 
 				for (int j = 0; j < vijandSpawner.getVijanden().size(); j++) {
-
-					if (vijandSpawner.getVijanden().get(j).getCenterX() < verdedigersLijst.getVerdedigers().get(i)
-							.getCenterX() + verdedigersLijst.getVerdedigers().get(i).radius
-							&& vijandSpawner.getVijanden().get(j).getCenterX() > verdedigersLijst.getVerdedigers()
-									.get(i).getCenterX() - verdedigersLijst.getVerdedigers().get(i).radius
-							&& vijandSpawner.getVijanden().get(j).getCenterY() < verdedigersLijst.getVerdedigers()
-									.get(i).getCenterY() + verdedigersLijst.getVerdedigers().get(i).radius
-							&& vijandSpawner.getVijanden().get(j).getCenterY() > verdedigersLijst.getVerdedigers()
-									.get(i).getCenterY() - verdedigersLijst.getVerdedigers().get(i).radius) {
-						vijandSpawner.getVijanden().get(j)
-								.krijgSchade(verdedigersLijst.getVerdedigers().get(i).aanvalsKracht);
+			
+					if (vijandSpawner.getVijanden().get(j).getCenterX() < verdedigersLijst.getVerdedigers().get(i).getCenterX()	+ verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterX() > verdedigersLijst.getVerdedigers().get(i).getCenterX() - verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterY() < verdedigersLijst.getVerdedigers().get(i).getCenterY() + verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterY() > verdedigersLijst.getVerdedigers().get(i).getCenterY() - verdedigersLijst.getVerdedigers().get(i).radius) {
+						vijandSpawner.getVijanden().get(j).krijgSchade(verdedigersLijst.getVerdedigers().get(i).aanvalsKracht);
 						verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd = 0;
-						//System.out.println(vijandSpawner.getVijanden().get(j).getLevens());
-						//System.out.println(vijandSpawner.getVijanden().get(j).isLevend());
+						System.out.println(vijandSpawner.getVijanden().get(j).getLevens());
+						System.out.println(vijandSpawner.getVijanden().get(j).isLevend());
 					}
 
 				}

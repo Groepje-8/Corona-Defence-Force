@@ -11,7 +11,6 @@ public class Urker extends Vijand {
 	
 	public Urker(Spel spel) {
 		super(spel, new Sprite(Spel.MEDIA_URL.concat("Urker.png")), levens, snelheid, beloning);
-		
 	}
 
 }

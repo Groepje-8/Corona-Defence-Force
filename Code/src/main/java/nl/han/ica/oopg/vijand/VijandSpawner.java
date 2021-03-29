@@ -18,8 +18,8 @@ public class VijandSpawner implements IAlarmListener {
 	
 	public VijandSpawner(Spel spel, int[][] vijandMap, int vijandSpawnX, int vijandSpawnY, int tijdTussenVijanden, int tijdTussenGolven) {
 		this.spel = spel;
-		this.vijandSpawnX = vijandSpawnX;
-		this.vijandSpawnY = vijandSpawnY;
+		this.vijandSpawnX = vijandSpawnX * 64 + 16;
+		this.vijandSpawnY = vijandSpawnY * 64 + 16;
 		this.tijdTussenVijanden = tijdTussenVijanden;
 		this.tijdTussenGolven = tijdTussenGolven;
 		this.vijandMap = vijandMap;
@@ -77,8 +77,17 @@ public class VijandSpawner implements IAlarmListener {
 	}
 	
 	private Vijand createVijand(int vijandTypeIndex){
-		if (vijandTypeIndex == 0){
+		switch (vijandTypeIndex){
+		case 0:
 			return new Relschopper(spel);
+		case 1:
+			return new AntivaxMoeder(spel);
+		case 2:
+			return new Urker(spel);
+		case 3:
+			return new FrangeLans(spel);
+		case 4:
+			return new BerryThiaudet(spel);
 		}
 		return null;
     }

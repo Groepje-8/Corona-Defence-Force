@@ -9,7 +9,7 @@ public class AntivaxMoeder extends Vijand {
 	private static int beloning = 15;
 	
 	public AntivaxMoeder(Spel spel) {
-		super(spel, new Sprite(Spel.MEDIA_URL.concat("Moeder.png")), levens, snelheid, beloning);
+		super(spel, new Sprite(Spel.MEDIA_URL.concat("AntivaxMoeder.png")), levens, snelheid, beloning);
 		
 	}
 
