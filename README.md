@@ -1,7 +1,7 @@
 # Corona-Defence-Force
-De OOPD eindopdracht OOPG a.k.a. 'De Gameopdracht'
-Gemaakt door Jorian en Levi.
-Maakt gebruik van de Game Engine geleverd door de HAN.
+De OOPD eindopdracht OOPG a.k.a. 'De Gameopdracht'  
+Gemaakt door Jorian en Levi.  
+Maakt gebruik van de Game Engine geleverd door de HAN.  
 Spelen op eigen risico.
 
 
