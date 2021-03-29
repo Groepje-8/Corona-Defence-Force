@@ -12,6 +12,7 @@ public class VijandSpawner implements IAlarmListener {
 	private Spel spel;
 	private Alarm alarmVijand, alarmGolf;
 	private ArrayList<Vijand> vijanden = new ArrayList<>();
+	private ArrayList<Vijand> teVerwijderenVijanden = new ArrayList<>();
 	private int vijandSpawnX, vijandSpawnY, tijdTussenVijanden, tijdTussenGolven;
 	private int aantalGolven, huidigeGolf, vijandIndex;
 	int[][] vijandMap;
@@ -32,14 +33,20 @@ public class VijandSpawner implements IAlarmListener {
 		for (Vijand vijand : vijanden) {
 			if (vijand.isLevend() == false) {
 				spel.deleteGameObject(vijand);
-				//vijanden.remove(vijand);
+				teVerwijderenVijanden.add(vijand);
 			}
 			if (vijand.isSupermarktBereikt() == true) {
 				spel.ontvangSchade(1);
 				spel.deleteGameObject(vijand);
-				//vijanden.remove(vijand);
+				teVerwijderenVijanden.add(vijand);
 			}
 		}
+	}
+	public void verwijderDodeVijanden() {
+		for(Vijand vijand : teVerwijderenVijanden) {
+			vijanden.remove(vijand);
+		}
+		teVerwijderenVijanden.clear();
 	}
 		
 	public void beginAlarmGolf() {
