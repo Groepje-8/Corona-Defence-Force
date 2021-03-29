@@ -36,6 +36,7 @@ public class Verdediger extends SpriteObject {
 	public PImage getSprite() {
 		return super.getImage();
 	}
+	
 
 //	@Override
 //	public void draw(PGraphics g) {
