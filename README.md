@@ -2,7 +2,7 @@
 OOPD gameopdracht 'Corona Defence Force'
 
 # Trello
-[Trello locatie] (https://trello.com/b/FPOyRvxq/oopd-gameopdracht-corona-defence-force)
+[Trello locatie](https://trello.com/b/FPOyRvxq/oopd-gameopdracht-corona-defence-force)
 
 
 # Handige Links
