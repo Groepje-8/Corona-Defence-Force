@@ -82,20 +82,21 @@ public class Spel extends GameEngine {
 		switch (state) {
 		case MENUSCHERM:
 
-			dashboard.draw(g);
-
+			
 			break;
 
 		case INSTELLINGENSCHERM:
-			dashboard.draw(g);
+			
+		
 
 			break;
 
 		case SPELSCHERM:
 
-			dashboard.draw(g);
+			
 			if (vijandSpawner != null) {
 				vijandSpawner.checkVijandStatus();
+				vijandSpawner.verwijderDodeVijanden();
 			}
 			verdedigersLoop();
 
@@ -111,30 +112,28 @@ public class Spel extends GameEngine {
 		case MENUSCHERM:
 
 			dashboard = menuScherm.getDashboard();
+			addDashboard(dashboard);
 
 			break;
 
 		case INSTELLINGENSCHERM:
 
 			dashboard = instellingenScherm.getDashboard();
+			addDashboard(dashboard);
 
 			break;
 
 		case SPELSCHERM:
+			geld = 50;
+			deleteAllDashboards();
 			initializeTileMap();
 			initializeVijandMap();
 
 			vijandSpawner.beginAlarmGolf();
 			
-
-
-
-//			buildScreen.getBuildScreen().draw(g);
-//			vervang dashboard met het bouw scherm loop door alle te kopen verdedigers en teken die.
-			dashboard = buildScreen.getBuildScreen();
-			for (GameObject i : buildScreen.Verdedigers) {
-				addGameObject(i, buildScreen.getX(), 0);
-			}
+			showDashboard();
+			showMoney();
+		    
 
 			break;
 
@@ -218,6 +217,24 @@ public class Spel extends GameEngine {
 			}
 		}
 
+	}
+	private void showMoney() {
+		TextObject money = new TextObject (Integer.toString(geld),22);
+		money.setForeColor(35,35,255,255);
+		addGameObject(money,(worldWidth / 2) - 75, 20);
+	}
+	
+	private void showDashboard() {
+		dashboard = buildScreen.getBuildScreen();
+		for (Verdediger i : buildScreen.Verdedigers) {
+			addGameObject(i, buildScreen.getX(), 0);
+			TextObject naam = new TextObject (i.getNaam(), 16);
+			naam.setForeColor(255,255,255,255);
+			addGameObject(naam,buildScreen.getX(), 0 + TILESIZE*2);
+			TextObject prijs = new TextObject (Integer.toString(i.getPrijs()),16);
+			prijs.setForeColor(255,255,255,255);
+			addGameObject(prijs,buildScreen.getX()+ TILESIZE * 2, 0 + TILESIZE * 2);
+		}
 	}
 
 	public void mouseClicked() {
