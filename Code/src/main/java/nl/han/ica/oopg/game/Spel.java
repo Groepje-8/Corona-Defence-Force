@@ -83,6 +83,7 @@ public class Spel extends GameEngine {
 			break;
 
 		case INSTELLINGENSCHERM:
+			
 			dashboard.draw(g);
 
 			break;
@@ -93,8 +94,13 @@ public class Spel extends GameEngine {
 			if (vijandSpawner != null) {
 				vijandSpawner.checkVijandStatus();
 			}
-			 verdedigersLoop();
+			verdedigersLoop();
 
+			break;
+		
+		case SCORESCHERM:
+			state = MENUSCHERM;
+			
 			break;
 
 		}
@@ -121,9 +127,6 @@ public class Spel extends GameEngine {
 			initializeVijandMap();
 
 			vijandSpawner.beginAlarmGolf();
-			
-
-
 
 			dashboard = buildScreen.getBuildScreen();
 			for (Verdediger i : buildScreen.Verdedigers) {
@@ -176,19 +179,16 @@ public class Spel extends GameEngine {
 		int tijdTussenVijanden = 1;
 
 		int tijdTussenGolven = 13;
-		
-		vijandSpawner = new VijandSpawner(this, vijandMap, vijandSpawnX, vijandSpawnY, tijdTussenVijanden, tijdTussenGolven);
+
+		vijandSpawner = new VijandSpawner(this, vijandMap, vijandSpawnX, vijandSpawnY, tijdTussenVijanden,
+				tijdTussenGolven);
 	}
-	
+
 	public void ontvangSchade(int schade) {
 		levens -= schade;
 	}
 
 	public void gameOver() {
-
-	}
-
-	public void plaatsNieuweVerdediger() {
 
 	}
 
@@ -204,12 +204,17 @@ public class Spel extends GameEngine {
 					.get(i).herlaadTijd) {
 
 				for (int j = 0; j < vijandSpawner.getVijanden().size(); j++) {
-			
-					if (vijandSpawner.getVijanden().get(j).getCenterX() < verdedigersLijst.getVerdedigers().get(i).getCenterX()	+ verdedigersLijst.getVerdedigers().get(i).radius
-							&& vijandSpawner.getVijanden().get(j).getCenterX() > verdedigersLijst.getVerdedigers().get(i).getCenterX() - verdedigersLijst.getVerdedigers().get(i).radius
-							&& vijandSpawner.getVijanden().get(j).getCenterY() < verdedigersLijst.getVerdedigers().get(i).getCenterY() + verdedigersLijst.getVerdedigers().get(i).radius
-							&& vijandSpawner.getVijanden().get(j).getCenterY() > verdedigersLijst.getVerdedigers().get(i).getCenterY() - verdedigersLijst.getVerdedigers().get(i).radius) {
-						vijandSpawner.getVijanden().get(j).krijgSchade(verdedigersLijst.getVerdedigers().get(i).aanvalsKracht);
+
+					if (vijandSpawner.getVijanden().get(j).getCenterX() < verdedigersLijst.getVerdedigers().get(i)
+							.getCenterX() + verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterX() > verdedigersLijst.getVerdedigers()
+									.get(i).getCenterX() - verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterY() < verdedigersLijst.getVerdedigers()
+									.get(i).getCenterY() + verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterY() > verdedigersLijst.getVerdedigers()
+									.get(i).getCenterY() - verdedigersLijst.getVerdedigers().get(i).radius) {
+						vijandSpawner.getVijanden().get(j)
+								.krijgSchade(verdedigersLijst.getVerdedigers().get(i).aanvalsKracht);
 						verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd = 0;
 						//System.out.println(vijandSpawner.getVijanden().get(j).getLevens());
 						//System.out.println(vijandSpawner.getVijanden().get(j).isLevend());
