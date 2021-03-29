@@ -47,7 +47,6 @@ public class Spel extends GameEngine {
 
 	private int levens, tijd, geld;
 //	private ArrayList<Verdediger> verdedigers;
-//	private ArrayList<Vijand> vijanden = new ArrayList<>();
 //	private ArrayList<Projectiel> projectielen;
 //	private Verdediger geselecteerdeVerdediger;
 	VijandSpawner vijandSpawner;
@@ -117,7 +116,7 @@ public class Spel extends GameEngine {
 		case SPELSCHERM:
 			initializeTileMap();
 			initializeVijandMap();
-			vijandSpawner.beginGolf();
+			vijandSpawner.beginAlarmGolf();
 			
 //			buildScreen.getBuildScreen().draw(g);
 //			vervang dashboard met het bouw scherm loop door alle te kopen verdedigers en teken die.
@@ -176,8 +175,13 @@ public class Spel extends GameEngine {
 		int vijandSpawnX = 1028 + 16;
 		int vijandSpawnY = 128 + 16;
 		int tijdTussenVijanden = 1;
+		int tijdTussenGolven = 13;
 		
-		vijandSpawner = new VijandSpawner(this, vijandMap, vijandSpawnX, vijandSpawnY, tijdTussenVijanden);
+		vijandSpawner = new VijandSpawner(this, vijandMap, vijandSpawnX, vijandSpawnY, tijdTussenVijanden, tijdTussenGolven);
+	}
+	
+	public void ontvangSchade(int schade) {
+		levens -= schade;
 	}
 	
 	public void gameOver() {

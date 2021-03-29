@@ -54,7 +54,7 @@ public class Vijand extends SpriteObject implements ICollidableWithTiles {
 	}
 	
 	private void changeDirectionOnCoordinates(int x, int y, int richting) {
-		int[] Coordinaten = {x * 64 + 31, x * 64 + 33, y * 64 + 31, y * 64 + 33};
+		int[] Coordinaten = {x * 64 + 30, x * 64 + 34, y * 64 + 30, y * 64 + 34};
 		if (xMidden > Coordinaten[0] && xMidden < Coordinaten[1] && yMidden > Coordinaten[2] && yMidden < Coordinaten[3]) {
 			setDirection(richting);
 		}

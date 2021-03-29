@@ -10,33 +10,53 @@ import nl.han.ica.oopg.tile.Tile;
 public class VijandSpawner implements IAlarmListener {
 	
 	private Spel spel;
-	private Alarm alarm;
+	private Alarm alarmVijand, alarmGolf;
 	private ArrayList<Vijand> vijanden = new ArrayList<>();
-	private int vijandSpawnX, vijandSpawnY, tijdTussenVijanden;
-	private int aantalGolven, huidigeGolf, vijandCounter, vijandIndex;
+	private int vijandSpawnX, vijandSpawnY, tijdTussenVijanden, tijdTussenGolven;
+	private int aantalGolven, huidigeGolf, vijandIndex;
 	int[][] vijandMap;
 	
-	public VijandSpawner(Spel spel, int[][] vijandMap, int vijandSpawnX, int vijandSpawnY, int tijdTussenVijanden) {
+	public VijandSpawner(Spel spel, int[][] vijandMap, int vijandSpawnX, int vijandSpawnY, int tijdTussenVijanden, int tijdTussenGolven) {
 		this.spel = spel;
 		this.vijandSpawnX = vijandSpawnX;
 		this.vijandSpawnY = vijandSpawnY;
 		this.tijdTussenVijanden = tijdTussenVijanden;
+		this.tijdTussenGolven = tijdTussenGolven;
 		this.vijandMap = vijandMap;
 		aantalGolven = vijandMap.length;
 		huidigeGolf = 0;
 		vijandIndex = 0;
-		vijandCounter = 0;
 	}
 	
 	public void checkVijandStatus() {
 		for (Vijand vijand : vijanden) {
 			if (vijand.isLevend() == false) {
 				spel.deleteGameObject(vijand);
+				//vijanden.remove(vijand);
 			}
 			if (vijand.isSupermarktBereikt() == true) {
-				//spel.ontangSchade();
+				spel.ontvangSchade(1);
 				spel.deleteGameObject(vijand);
+				//vijanden.remove(vijand);
 			}
+		}
+	}
+		
+	public void beginAlarmGolf() {
+		alarmGolf = new Alarm("Nieuwe Golf", tijdTussenGolven);
+	    alarmGolf.addTarget(this);
+	    alarmGolf.start();
+	    beginAlarmVijand();
+	}
+	
+	public void beginAlarmVijand() {
+		if (vijandIndex == vijandMap[huidigeGolf].length) {
+			alarmVijand.stop();
+		}
+		else {
+			alarmVijand = new Alarm("Nieuwe Vijand", tijdTussenVijanden);
+		    alarmVijand.addTarget(this);
+		    alarmVijand.start();
 		}
 	}
 	
@@ -44,23 +64,12 @@ public class VijandSpawner implements IAlarmListener {
 		huidigeGolf ++;
 		vijandIndex = 0;
 	}
-		
-	public void beginGolf() {
-		alarm = new Alarm("Nieuwe Vijand", tijdTussenVijanden);
-	    alarm.addTarget(this);
-	    alarm.start();
-	}
 	
 	private void spawnVijand() {
-		if (vijandIndex == vijandMap[huidigeGolf].length) {
-			alarm.stop();
-		}
-		else {
-			vijanden.add(createVijand(vijandMap[huidigeGolf][vijandIndex]));
-			spel.addGameObject(vijanden.get(vijandCounter), vijandSpawnX, vijandSpawnY);
-			vijandCounter++;
-			vijandIndex++;
-		}
+		Vijand nieuweVijand = createVijand(vijandMap[huidigeGolf][vijandIndex]);
+		vijanden.add(nieuweVijand);
+		spel.addGameObject(nieuweVijand, vijandSpawnX, vijandSpawnY);
+		vijandIndex++;
 	}
 	
 	private Vijand createVijand(int vijandTypeIndex){
@@ -72,7 +81,13 @@ public class VijandSpawner implements IAlarmListener {
 	
 	@Override
 	public void triggerAlarm(String alarmName) {
-		spawnVijand();
-		beginGolf();
+		if (alarmName == "Nieuwe Vijand") {
+			spawnVijand();
+			beginAlarmVijand();
+		}
+		else if (alarmName == "Nieuwe Golf") {
+			volgendeGolf();
+			beginAlarmGolf();
+		}
 	}
 }
