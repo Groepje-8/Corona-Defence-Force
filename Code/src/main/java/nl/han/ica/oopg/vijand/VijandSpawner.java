@@ -47,6 +47,7 @@ public class VijandSpawner implements IAlarmListener {
 	    alarmGolf.addTarget(this);
 	    alarmGolf.start();
 	    beginAlarmVijand();
+	    
 	}
 	
 	public void beginAlarmVijand() {
@@ -58,6 +59,9 @@ public class VijandSpawner implements IAlarmListener {
 		    alarmVijand.addTarget(this);
 		    alarmVijand.start();
 		}
+	}
+	public ArrayList<Vijand> getVijanden(){
+		return this.vijanden;
 	}
 	
 	public void volgendeGolf() {

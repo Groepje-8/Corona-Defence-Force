@@ -17,6 +17,9 @@ import nl.han.ica.oopg.tile.SupermarktTile;
 import nl.han.ica.oopg.tile.TileMap;
 import nl.han.ica.oopg.tile.TileType;
 import nl.han.ica.oopg.tile.WegTile;
+import nl.han.ica.oopg.verdediger.PolitieAgent;
+import nl.han.ica.oopg.verdediger.Verdediger;
+import nl.han.ica.oopg.verdediger.VerdedigersLijst;
 import nl.han.ica.oopg.view.View;
 import nl.han.ica.oopg.vijand.Relschopper;
 import nl.han.ica.oopg.vijand.Vijand;
@@ -26,20 +29,22 @@ import nl.han.ica.oopg.screens.InstellingenScherm;
 @SuppressWarnings("serial")
 public class Spel extends GameEngine {
 
-	public static String MEDIA_URL = "src/main/java/media/";
-	//public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
+	// public static String MEDIA_URL = "src/main/java/media/";
+	public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
 	private final int MENUSCHERM = 0;
 	private final int INSTELLINGENSCHERM = 1;
 	private final int SCORESCHERM = 2;
 	private final int SPELSCHERM = 3;
+	private final int TILESIZE = 64;
 	private int state = MENUSCHERM;
 	private InstellingenScherm instellingenScherm;
 	private MenuScherm menuScherm;
 	private Dashboard dashboard;
 	private TextObject dashboardText;
+	private VerdedigersLijst verdedigersLijst;
 
 	private BuildScreen buildScreen;
-	private SpriteObject selectedVerdediger;
+	private Verdediger selectedVerdediger;
 	public Sound backgroundSound;
 
 	int worldWidth = 1280;
@@ -62,7 +67,7 @@ public class Spel extends GameEngine {
 		menuScherm = new MenuScherm();
 		buildScreen = new BuildScreen();
 		backgroundSound = new Sound(this, MEDIA_URL.concat("8bitmusic.mp3"));
-
+		verdedigersLijst = new VerdedigersLijst(this, TILESIZE);
 		View view = new View(worldWidth, worldHeight);
 		setView(view);
 		size(worldWidth, worldHeight);
@@ -70,7 +75,7 @@ public class Spel extends GameEngine {
 
 		bepaalScherm();
 	}
-	
+
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
@@ -87,11 +92,13 @@ public class Spel extends GameEngine {
 			break;
 
 		case SPELSCHERM:
+
 			dashboard.draw(g);
 			if (vijandSpawner != null) {
 				vijandSpawner.checkVijandStatus();
 			}
-			
+			 verdedigersLoop();
+
 			break;
 
 		}
@@ -116,8 +123,12 @@ public class Spel extends GameEngine {
 		case SPELSCHERM:
 			initializeTileMap();
 			initializeVijandMap();
+
 			vijandSpawner.beginAlarmGolf();
 			
+
+
+
 //			buildScreen.getBuildScreen().draw(g);
 //			vervang dashboard met het bouw scherm loop door alle te kopen verdedigers en teken die.
 			dashboard = buildScreen.getBuildScreen();
@@ -136,14 +147,6 @@ public class Spel extends GameEngine {
 			break;
 		}
 	}
-	
-
-	public void addDashboard() {
-		Dashboard dashboard = new Dashboard(0, 0, worldWidth, 300);
-		dashboardText = new TextObject("hi", 12);
-		dashboard.addGameObject(dashboardText);
-		addDashboard(dashboard);
-	}
 
 	private void initializeTileMap() {
 
@@ -154,7 +157,7 @@ public class Spel extends GameEngine {
 		TileType<WegTile> wegTileType = new TileType<>(WegTile.class, wegSprite);
 		TileType<GrasTile> grasTileType = new TileType<>(GrasTile.class, grasSprite);
 		TileType<SupermarktTile> supermarktTileType = new TileType<>(SupermarktTile.class, supermarktSprite);
-		int tileSize = 64;
+
 		TileType[] tileTypes = { wegTileType, grasTileType, supermarktTileType };
 
 		int tilesMap[][] = { { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -163,18 +166,15 @@ public class Spel extends GameEngine {
 				{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 }, { 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
 				{ 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1 }, { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
-		tileMap = new TileMap(tileSize, tileTypes, tilesMap);
+		tileMap = new TileMap(TILESIZE, tileTypes, tilesMap);
 	}
-	
+
 	public void initializeVijandMap() {
-		int vijandMap[][] = {
-			{0, 0, 0, 0, 0},
-			{0, 0, 0, 0, 0},
-			{0, 0, 0, 0, 0}
-		};
+		int vijandMap[][] = { { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 } };
 		int vijandSpawnX = 1028 + 16;
 		int vijandSpawnY = 128 + 16;
 		int tijdTussenVijanden = 1;
+
 		int tijdTussenGolven = 13;
 		
 		vijandSpawner = new VijandSpawner(this, vijandMap, vijandSpawnX, vijandSpawnY, tijdTussenVijanden, tijdTussenGolven);
@@ -183,7 +183,7 @@ public class Spel extends GameEngine {
 	public void ontvangSchade(int schade) {
 		levens -= schade;
 	}
-	
+
 	public void gameOver() {
 
 	}
@@ -196,9 +196,35 @@ public class Spel extends GameEngine {
 
 	}
 
-	public void mousePressed() {
-		// kijk naar dashboard in menuscherm.
-		if (state == MENUSCHERM) {
+	public void verdedigersLoop() {
+		for (int i = 0; i < verdedigersLijst.getVerdedigers().size(); i++) {
+
+			verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd++;
+			if (verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd > verdedigersLijst.getVerdedigers()
+					.get(i).herlaadTijd) {
+
+				for (int j = 0; j < vijandSpawner.getVijanden().size(); j++) {
+			
+					if (vijandSpawner.getVijanden().get(j).getCenterX() < verdedigersLijst.getVerdedigers().get(i).getCenterX()	+ verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterX() > verdedigersLijst.getVerdedigers().get(i).getCenterX() - verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterY() < verdedigersLijst.getVerdedigers().get(i).getCenterY() + verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterY() > verdedigersLijst.getVerdedigers().get(i).getCenterY() - verdedigersLijst.getVerdedigers().get(i).radius) {
+						vijandSpawner.getVijanden().get(j).krijgSchade(verdedigersLijst.getVerdedigers().get(i).aanvalsKracht);
+						verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd = 0;
+						System.out.println(vijandSpawner.getVijanden().get(j).getLevens());
+						System.out.println(vijandSpawner.getVijanden().get(j).isLevend());
+					}
+
+				}
+			}
+		}
+
+	}
+
+	public void mouseClicked() {
+		switch (state) {
+		case MENUSCHERM:
+
 			for (GameObject i : dashboard.getGameObjects()) {
 				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
 						&& mouseY < (i.getY() + i.getHeight())) {
@@ -213,9 +239,10 @@ public class Spel extends GameEngine {
 
 				}
 			}
-		}
-		// kijk naar dashboard in instellingenScherm.
-		if (state == INSTELLINGENSCHERM) {
+			break;
+
+		case INSTELLINGENSCHERM:
+
 			for (GameObject i : dashboard.getGameObjects()) {
 
 				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
@@ -238,14 +265,16 @@ public class Spel extends GameEngine {
 				}
 
 			}
-		}
 
-		if (state == SPELSCHERM) {
-			for (SpriteObject i : buildScreen.Verdedigers) {
+			break;
+		case SPELSCHERM:
+
+			for (Verdediger i : buildScreen.Verdedigers) {
 				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
 						&& mouseY < (i.getY() + i.getHeight())) {
 					this.selectedVerdediger = i;
-					System.out.println("Verdediger geselecteerd");
+					System.out.println(i.naam + " geselecteerd");
+
 				}
 
 			}
@@ -254,16 +283,21 @@ public class Spel extends GameEngine {
 					&& mouseY < (10 * tileMap.getTileSize())) {
 				if (tileMap.getTileOnPosition(mouseX, mouseY) != null) {
 					if (tileMap.getTileOnPosition(mouseX, mouseY) instanceof GrasTile) {
-						System.out.println("plaats toren");
-						tileMap.getTileOnPosition(mouseX, mouseY).setSprite(new Sprite(MEDIA_URL.concat("cop.png")));
-						tileMap.getTileOnPosition(mouseX, mouseY).setSpriteSize(tileMap.getTileSize());
+						System.out.println(selectedVerdediger.naam + "geplaatst");
+						verdedigersLijst.addVerdediger(new PolitieAgent(25, 5),
+								tileMap.getTilePixelLocation(tileMap.getTileOnPosition(mouseX, mouseY)));
+
 						this.selectedVerdediger = null;
+					}
+					if (verdedigersLijst.isVerdediger(mouseX, mouseY)) {
+						System.out.println("Hier staat al een verdediger");
+
 					}
 
 				}
 
 			}
-
+			break;
 		}
 
 	}

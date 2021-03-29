@@ -33,6 +33,9 @@ public class Vijand extends SpriteObject implements ICollidableWithTiles {
 	@Override
 	public void update() {
 		lopenLangsPad();
+		if (this.levens < 1) {
+			levend = false;
+		}
 		
 	}
 	
@@ -59,7 +62,9 @@ public class Vijand extends SpriteObject implements ICollidableWithTiles {
 			setDirection(richting);
 		}
 	}
-	
+	public int getLevens() {
+		return levens;
+	}
 	public void krijgSchade(int schade) {
 		levens -= schade;
 	}
@@ -74,6 +79,12 @@ public class Vijand extends SpriteObject implements ICollidableWithTiles {
 	
 	int getBeloning() {
 		return beloning;
+	}
+	public float getXMidden() {
+		return this.xMidden;
+	}
+	public float getYMidden() {
+		return this.yMidden;
 	}
 
 	
