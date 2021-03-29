@@ -1,12 +1,11 @@
 package nl.han.ica.oopg.game;
 
-import java.util.ArrayList;
+
 
 import nl.han.ica.oopg.dashboard.Dashboard;
 import nl.han.ica.oopg.engine.GameEngine;
 import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
-import nl.han.ica.oopg.objects.SpriteObject;
 import nl.han.ica.oopg.objects.TextObject;
 import nl.han.ica.oopg.screens.BuildScreen;
 import nl.han.ica.oopg.screens.InstellingenScherm;
@@ -21,10 +20,8 @@ import nl.han.ica.oopg.verdediger.PolitieAgent;
 import nl.han.ica.oopg.verdediger.Verdediger;
 import nl.han.ica.oopg.verdediger.VerdedigersLijst;
 import nl.han.ica.oopg.view.View;
-import nl.han.ica.oopg.vijand.Relschopper;
-import nl.han.ica.oopg.vijand.Vijand;
 import nl.han.ica.oopg.vijand.VijandSpawner;
-import nl.han.ica.oopg.screens.InstellingenScherm;
+
 
 @SuppressWarnings("serial")
 public class Spel extends GameEngine {
@@ -40,7 +37,6 @@ public class Spel extends GameEngine {
 	private InstellingenScherm instellingenScherm;
 	private MenuScherm menuScherm;
 	private Dashboard dashboard;
-	private TextObject dashboardText;
 	private VerdedigersLijst verdedigersLijst;
 
 	private BuildScreen buildScreen;
@@ -129,11 +125,15 @@ public class Spel extends GameEngine {
 
 
 
-//			buildScreen.getBuildScreen().draw(g);
-//			vervang dashboard met het bouw scherm loop door alle te kopen verdedigers en teken die.
 			dashboard = buildScreen.getBuildScreen();
-			for (GameObject i : buildScreen.Verdedigers) {
+			for (Verdediger i : buildScreen.Verdedigers) {
 				addGameObject(i, buildScreen.getX(), 0);
+				TextObject naam = new TextObject (i.getNaam(), 16);
+				naam.setForeColor(255,255,255,255);
+				addGameObject(naam,buildScreen.getX(), 0 + TILESIZE*2);
+				TextObject prijs = new TextObject (Integer.toString(i.getPrijs()),16);
+				prijs.setForeColor(255,255,255,255);
+				addGameObject(prijs,buildScreen.getX()+ TILESIZE * 2, 0 + TILESIZE * 2);
 			}
 
 			break;
@@ -211,8 +211,8 @@ public class Spel extends GameEngine {
 							&& vijandSpawner.getVijanden().get(j).getCenterY() > verdedigersLijst.getVerdedigers().get(i).getCenterY() - verdedigersLijst.getVerdedigers().get(i).radius) {
 						vijandSpawner.getVijanden().get(j).krijgSchade(verdedigersLijst.getVerdedigers().get(i).aanvalsKracht);
 						verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd = 0;
-						System.out.println(vijandSpawner.getVijanden().get(j).getLevens());
-						System.out.println(vijandSpawner.getVijanden().get(j).isLevend());
+						//System.out.println(vijandSpawner.getVijanden().get(j).getLevens());
+						//System.out.println(vijandSpawner.getVijanden().get(j).isLevend());
 					}
 
 				}
