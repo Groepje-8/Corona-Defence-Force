@@ -25,18 +25,31 @@ public class Verdediger extends SpriteObject {
 		resize();
 
 	}
+	public Verdediger(Verdediger copy){
+		super(new Sprite(copy.getImage()));
+		this.x = copy.getCenterX();
+		this.y = copy.getCenterY();
+		this.prijs = copy.prijs;
+		this.radius = copy.radius;
+		this.aanvalsKracht = copy.aanvalsKracht;
+		this.naam = copy.naam;
+		this.laatsteAanvaltijd = copy.laatsteAanvaltijd;
+		this.herlaadTijd = copy.herlaadTijd;
+		//resize();
+	}
 
 
 	public void kopen() {
 
 	}
 	private void resize() {
-		super.getImage().resize(128, 128);
+		super.getImage().resize(90, 90);
 		
 	}
 	public void resize(int tileSize) {
 		super.getImage().resize(tileSize, tileSize);
 	}
+
 
 	public PImage getSprite() {
 		return super.getImage();

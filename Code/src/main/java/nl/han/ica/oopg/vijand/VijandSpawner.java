@@ -36,6 +36,7 @@ public class VijandSpawner implements IAlarmListener {
 			if (vijand.isLevend() == false) {
 				spel.deleteGameObject(vijand);
 				teVerwijderenVijanden.add(vijand);
+				spel.setGeld(5);
 				verslagenVijanden++;
 			}
 			if (vijand.isSupermarktBereikt() == true) {

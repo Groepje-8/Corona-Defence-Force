@@ -4,11 +4,12 @@ import java.util.ArrayList;
 
 import nl.han.ica.oopg.dashboard.Dashboard;
 
-import nl.han.ica.oopg.objects.Sprite;
-import nl.han.ica.oopg.objects.SpriteObject;
+
+import nl.han.ica.oopg.verdediger.Dokter;
 import nl.han.ica.oopg.verdediger.PolitieAgent;
 import nl.han.ica.oopg.verdediger.Verdediger;
-import processing.core.PGraphics;
+import nl.han.ica.oopg.verdediger.Waterkanon;
+
 
 public class BuildScreen {
 	public ArrayList<Verdediger> Verdedigers = new ArrayList<Verdediger>();
@@ -20,19 +21,19 @@ public class BuildScreen {
 	
 	public BuildScreen(){
 		screen = new Dashboard(x, y, width, height);
-		//screen.setBackground(255, 255, 255);
 		fillVerdedigers();
 		
 	}
 	private void fillVerdedigers() {
-		PolitieAgent politieAgent = new PolitieAgent(100, 5);
+		PolitieAgent politieAgent = new PolitieAgent();
+		Dokter dokter = new Dokter();
+		Waterkanon waterkanon = new Waterkanon();
 		Verdedigers.add(politieAgent);
+		Verdedigers.add(dokter);
+		Verdedigers.add(waterkanon);
 	}
-	
-	public void drawBuildScreen(PGraphics g) {
-//		   PGraphics canvas = drawCanvas();
-//	        g.image(canvas, this.getX(), this.getY());
-	}
+
+
 	
 	public Dashboard getBuildScreen() {
 		return screen;

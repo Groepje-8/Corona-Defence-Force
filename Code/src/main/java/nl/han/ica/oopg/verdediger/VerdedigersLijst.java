@@ -1,15 +1,11 @@
 package nl.han.ica.oopg.verdediger;
 
-import nl.han.ica.oopg.tile.TileType;
+
 import processing.core.PGraphics;
 import processing.core.PVector;
-import nl.han.ica.oopg.tile.Tile;
-import nl.han.ica.oopg.tile.TileMap;
-
 import java.util.ArrayList;
-
 import nl.han.ica.oopg.game.Spel;
-import nl.han.ica.oopg.objects.SpriteObject;
+
 
 public class VerdedigersLijst {
 
@@ -30,6 +26,7 @@ public class VerdedigersLijst {
 		verdediger.resize(tileSize);
 		verdedigers.add(verdediger);
 		spel.addGameObject(verdedigers.get(verdedigers.size() -1), xy.x, xy.y ,101);
+		
 	}
 
 	public void draw(PGraphics pGraphics) {

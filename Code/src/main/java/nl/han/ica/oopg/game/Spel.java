@@ -6,7 +6,6 @@ import nl.han.ica.oopg.dashboard.Dashboard;
 import nl.han.ica.oopg.engine.GameEngine;
 import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
-import nl.han.ica.oopg.objects.SpriteObject;
 import nl.han.ica.oopg.objects.TextObject;
 import nl.han.ica.oopg.screens.BuildScreen;
 import nl.han.ica.oopg.screens.InstellingenScherm;
@@ -18,39 +17,36 @@ import nl.han.ica.oopg.tile.SupermarktTile;
 import nl.han.ica.oopg.tile.TileMap;
 import nl.han.ica.oopg.tile.TileType;
 import nl.han.ica.oopg.tile.WegTile;
-import nl.han.ica.oopg.verdediger.PolitieAgent;
 import nl.han.ica.oopg.verdediger.Verdediger;
 import nl.han.ica.oopg.verdediger.VerdedigersLijst;
 import nl.han.ica.oopg.view.View;
-import nl.han.ica.oopg.vijand.Relschopper;
-import nl.han.ica.oopg.vijand.Vijand;
 import nl.han.ica.oopg.vijand.VijandSpawner;
-import nl.han.ica.oopg.screens.InstellingenScherm;
 
 @SuppressWarnings("serial")
 public class Spel extends GameEngine {
 
-	public static String MEDIA_URL = "src/main/java/media/";
-	//public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
+	// public static String MEDIA_URL = "src/main/java/media/";
+	public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
 	private final int MENUSCHERM = 0;
 	private final int INSTELLINGENSCHERM = 1;
 	private final int SCORESCHERM = 2;
 	private final int SPELSCHERM = 3;
 	private final int TILESIZE = 64;
+	private final int BUILDSCREENXOFFSET = 135;
+	private final int BUILDSCREENTEXTOFFSET = 90;
+	private final int BUILDSCREENFONTSIZE = 16;
 	private int state = MENUSCHERM;
 	private InstellingenScherm instellingenScherm;
 	private MenuScherm menuScherm;
 	private Dashboard dashboard;
-	private TextObject dashboardText;
 	private VerdedigersLijst verdedigersLijst;
-
 	private BuildScreen buildScreen;
 	private Verdediger selectedVerdediger;
 	public Sound backgroundSound;
-	
-	TextObject levensTO, geldTO, aantalVijandenTO, timerTO;
+
+	TextObject levensTO, geldTO, aantalVijandenTO, timerTO, messageTO;
 	View view;
-	
+
 	int worldWidth = 1280;
 	int worldHeight = 720;
 
@@ -63,22 +59,20 @@ public class Spel extends GameEngine {
 		Spel spel = new Spel();
 		spel.runSketch();
 	}
-	
-	
-	
+
 	@Override
 	public void setupGame() {
 		instellingenScherm = new InstellingenScherm();
 		menuScherm = new MenuScherm();
 		buildScreen = new BuildScreen();
-		
+
 		backgroundSound = new Sound(this, MEDIA_URL.concat("8bitmusic.mp3"));
 		verdedigersLijst = new VerdedigersLijst(this, TILESIZE);
-		
+
 		view = new View(worldWidth, worldHeight);
 		setView(view);
 		size(worldWidth, worldHeight);
-		
+
 		bepaalScherm();
 	}
 
@@ -87,37 +81,37 @@ public class Spel extends GameEngine {
 		switch (state) {
 		case MENUSCHERM:
 
-			
 			break;
 
 		case INSTELLINGENSCHERM:
-			
-		
 
 			break;
 
 		case SPELSCHERM:
 
-			
 			if (vijandSpawner != null) {
 				vijandSpawner.checkVijandStatus();
 				vijandSpawner.verwijderDodeVijanden();
 				updateGameDetailDashboard();
 			}
-			
+
 			verdedigersLoop();
+			isGameOver();
+
+			break;
+		case SCORESCHERM:
+			state = MENUSCHERM;
 
 			break;
 
 		}
-
 	}
 
 	public void bepaalScherm() {
 
 		switch (state) {
 		case MENUSCHERM:
-			
+
 			view.setBackground(30, 30, 36);
 			dashboard = menuScherm.getDashboard();
 			addDashboard(dashboard);
@@ -132,17 +126,20 @@ public class Spel extends GameEngine {
 			break;
 
 		case SPELSCHERM:
-			
-			view.setBackground(loadImage(MEDIA_URL.concat("SpelBackground.png")));
-			geld = 50;
+
+			geld = 100;
 			levens = 20;
+			view.setBackground(loadImage(MEDIA_URL.concat("SpelBackground.png")));
+			
 			deleteAllDashboards();
+
 			initializeTileMap();
 			initializeVijandSpawner();
+			initializeMessage();
 
 			vijandSpawner.beginAlarmGolf();
 			vijandSpawner.beginAlarmTimer();
-			
+
 			showBuildScreenDashboard();
 			showGameDetailDashboard();
 
@@ -177,8 +174,8 @@ public class Spel extends GameEngine {
 				{ 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1 }, { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
 		tileMap = new TileMap(TILESIZE, tileTypes, tilesMap);
-		
-		addGameObject(new Logo(new Sprite(MEDIA_URL.concat("Jumbo.png"))), 6, 80);
+
+		addGameObject(new Logo(new Sprite(MEDIA_URL.concat("jumbo1.png"))), 6, 80);
 	}
 
 	public void initializeVijandSpawner() {
@@ -187,10 +184,11 @@ public class Spel extends GameEngine {
 		int vijandSpawnY = 2;
 		int tijdTussenVijanden = 1;
 		int tijdTussenGolven = 15;
-		
-		vijandSpawner = new VijandSpawner(this, vijandMap, vijandSpawnX, vijandSpawnY, tijdTussenVijanden, tijdTussenGolven);
+
+		vijandSpawner = new VijandSpawner(this, vijandMap, vijandSpawnX, vijandSpawnY, tijdTussenVijanden,
+				tijdTussenGolven);
 	}
-	
+
 	public void ontvangSchade(int schade) {
 		levens -= schade;
 	}
@@ -201,6 +199,9 @@ public class Spel extends GameEngine {
 
 	public void plaatsNieuweVerdediger() {
 
+	}
+	public void setGeld(int geld) {
+		this.geld = this.geld + geld;
 	}
 
 	public void setGameSpeed() {
@@ -215,57 +216,93 @@ public class Spel extends GameEngine {
 					.get(i).herlaadTijd) {
 
 				for (int j = 0; j < vijandSpawner.getVijanden().size(); j++) {
-			
-					if (vijandSpawner.getVijanden().get(j).getCenterX() < verdedigersLijst.getVerdedigers().get(i).getCenterX()	+ verdedigersLijst.getVerdedigers().get(i).radius
-							&& vijandSpawner.getVijanden().get(j).getCenterX() > verdedigersLijst.getVerdedigers().get(i).getCenterX() - verdedigersLijst.getVerdedigers().get(i).radius
-							&& vijandSpawner.getVijanden().get(j).getCenterY() < verdedigersLijst.getVerdedigers().get(i).getCenterY() + verdedigersLijst.getVerdedigers().get(i).radius
-							&& vijandSpawner.getVijanden().get(j).getCenterY() > verdedigersLijst.getVerdedigers().get(i).getCenterY() - verdedigersLijst.getVerdedigers().get(i).radius) {
-						vijandSpawner.getVijanden().get(j).krijgSchade(verdedigersLijst.getVerdedigers().get(i).aanvalsKracht);
+
+					if (vijandSpawner.getVijanden().get(j).getCenterX() < verdedigersLijst.getVerdedigers().get(i)
+							.getCenterX() + verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterX() > verdedigersLijst.getVerdedigers()
+									.get(i).getCenterX() - verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterY() < verdedigersLijst.getVerdedigers()
+									.get(i).getCenterY() + verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterY() > verdedigersLijst.getVerdedigers()
+									.get(i).getCenterY() - verdedigersLijst.getVerdedigers().get(i).radius) {
+						vijandSpawner.getVijanden().get(j)
+								.krijgSchade(verdedigersLijst.getVerdedigers().get(i).aanvalsKracht);
 						verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd = 0;
 						System.out.println(vijandSpawner.getVijanden().get(j).getLevens());
 						System.out.println(vijandSpawner.getVijanden().get(j).isLevend());
+						break;
+
 					}
 
 				}
 			}
 		}
 	}
-	
+
 	private void showGameDetailDashboard() {
 		levensTO = new TextObject("Levens = " + levens, 22);
 		levensTO.setForeColor(153, 0, 255, 255);
 		addGameObject(levensTO, 200, 668);
-		
-		geldTO = new TextObject ("$ " + geld,22);
+
+		geldTO = new TextObject("$ " + geld, 22);
 		geldTO.setForeColor(153, 0, 255, 255);
 		addGameObject(geldTO, 400, 668);
-		
+
 		aantalVijandenTO = new TextObject("Vijanden verslagen = " + vijandSpawner.getAantalVerslagen(), 22);
 		aantalVijandenTO.setForeColor(153, 0, 255, 255);
 		addGameObject(aantalVijandenTO, 520, 668);
-		
+
 		timerTO = new TextObject("Volgende golf: " + vijandSpawner.getGolfTimer(), 22);
 		timerTO.setForeColor(153, 0, 255, 255);
 		addGameObject(timerTO, 800, 668);
 	}
-	
+
 	private void updateGameDetailDashboard() {
 		levensTO.setText("Levens = " + levens);
 		geldTO.setText("$" + geld);
 		aantalVijandenTO.setText("Vijanden verslagen = " + vijandSpawner.getAantalVerslagen());
 		timerTO.setText("Volgende golf: " + vijandSpawner.getGolfTimer());
 	}
-	
+
 	private void showBuildScreenDashboard() {
-		dashboard = buildScreen.getBuildScreen();
-		for (Verdediger i : buildScreen.Verdedigers) {
-			addGameObject(i, buildScreen.getX(), 0);
-			TextObject naam = new TextObject (i.getNaam(), 16);
-			naam.setForeColor(255,255,255,255);
-			addGameObject(naam,buildScreen.getX(), 0 + TILESIZE*2);
-			TextObject prijs = new TextObject (Integer.toString(i.getPrijs()),16);
-			prijs.setForeColor(255,255,255,255);
-			addGameObject(prijs,buildScreen.getX()+ TILESIZE * 2, 0 + TILESIZE * 2);
+		for (int i = 0; i < buildScreen.Verdedigers.size(); i++) {
+
+			int x = buildScreen.getX() + (BUILDSCREENXOFFSET * (i % 2)) + 12;
+			int y = ((i / 2) | 0) * BUILDSCREENXOFFSET + 15;
+
+			addGameObject(buildScreen.Verdedigers.get(i), x, y, 101);
+
+			TextObject naam = new TextObject(buildScreen.Verdedigers.get(i).getNaam(), BUILDSCREENFONTSIZE);
+			naam.setForeColor(255, 255, 255, 255);
+			x = buildScreen.getX() + (BUILDSCREENXOFFSET * (i % 2))+ 12;
+			y = BUILDSCREENTEXTOFFSET + ((i / 2) | 0) * BUILDSCREENXOFFSET+ 15;
+			addGameObject(naam, x, y, 101);
+
+			TextObject prijs = new TextObject("Cost: " + Integer.toString(buildScreen.Verdedigers.get(i).getPrijs()),
+					BUILDSCREENFONTSIZE);
+			prijs.setForeColor(255, 255, 255, 255);
+			x = buildScreen.getX() + (BUILDSCREENXOFFSET * (i % 2))+ 12;
+			y = 20 + BUILDSCREENTEXTOFFSET + ((i / 2) | 0) * BUILDSCREENXOFFSET+ 15;
+			addGameObject(prijs, x,	y, 101);
+		}
+	}
+
+	private void initializeMessage() {
+		messageTO = new TextObject("", 22);
+		messageTO.setForeColor(35, 35, 255, 255);
+		addGameObject(messageTO, (worldWidth / 2) - 75, 20);
+	}
+
+	private void showMessage(String x) {
+		messageTO.setText(x);
+	}
+	private void clearMessage() {
+		messageTO.setText("");
+	}
+	private void isGameOver() {
+		if(levens < 1) {
+			this.pauseGame();
+			state = SCORESCHERM;
 		}
 	}
 
@@ -320,8 +357,9 @@ public class Spel extends GameEngine {
 			for (Verdediger i : buildScreen.Verdedigers) {
 				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
 						&& mouseY < (i.getY() + i.getHeight())) {
-					this.selectedVerdediger = i;
+					this.selectedVerdediger = new Verdediger(i);
 					System.out.println(i.naam + " geselecteerd");
+					clearMessage();
 
 				}
 
@@ -331,14 +369,20 @@ public class Spel extends GameEngine {
 					&& mouseY < (10 * tileMap.getTileSize())) {
 				if (tileMap.getTileOnPosition(mouseX, mouseY) != null) {
 					if (tileMap.getTileOnPosition(mouseX, mouseY) instanceof GrasTile) {
-						System.out.println(selectedVerdediger.naam + "geplaatst");
-						verdedigersLijst.addVerdediger(new PolitieAgent(25, 5),
-								tileMap.getTilePixelLocation(tileMap.getTileOnPosition(mouseX, mouseY)));
+						if (geld - selectedVerdediger.prijs > 0) {
+							System.out.println(selectedVerdediger.naam + "geplaatst");
+							verdedigersLijst.addVerdediger(new Verdediger(selectedVerdediger),
+									tileMap.getTilePixelLocation(tileMap.getTileOnPosition(mouseX, mouseY)));
+							geld -= selectedVerdediger.prijs;
 
-						this.selectedVerdediger = null;
+							this.selectedVerdediger = null;
+							clearMessage();
+						} else {
+							showMessage("Niet genoeg geld");
+						}
 					}
 					if (verdedigersLijst.isVerdediger(mouseX, mouseY)) {
-						System.out.println("Hier staat al een verdediger");
+						showMessage("Hier staat al een verdediger");
 
 					}
 
