@@ -25,8 +25,8 @@ import nl.han.ica.oopg.vijand.VijandSpawner;
 @SuppressWarnings("serial")
 public class Spel extends GameEngine {
 
-	// public static String MEDIA_URL = "src/main/java/media/";
-	public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
+	public static String MEDIA_URL = "src/main/java/media/";
+	//public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
 	private final int MENUSCHERM = 0;
 	private final int INSTELLINGENSCHERM = 1;
 	private final int SCORESCHERM = 2;
@@ -112,14 +112,15 @@ public class Spel extends GameEngine {
 		switch (state) {
 		case MENUSCHERM:
 
-			view.setBackground(30, 30, 36);
+			view.setBackground(loadImage(MEDIA_URL.concat("MenuBackground.png")));
 			dashboard = menuScherm.getDashboard();
 			addDashboard(dashboard);
 
 			break;
 
 		case INSTELLINGENSCHERM:
-
+			
+			view.setBackground(loadImage(MEDIA_URL.concat("InstellingenBackground.png")));
 			dashboard = instellingenScherm.getDashboard();
 			addDashboard(dashboard);
 
@@ -241,19 +242,19 @@ public class Spel extends GameEngine {
 
 	private void showGameDetailDashboard() {
 		levensTO = new TextObject("Levens = " + levens, 22);
-		levensTO.setForeColor(153, 0, 255, 255);
+		levensTO.setForeColor(23, 13, 29, 255);
 		addGameObject(levensTO, 200, 668);
 
 		geldTO = new TextObject("$ " + geld, 22);
-		geldTO.setForeColor(153, 0, 255, 255);
+		geldTO.setForeColor(23, 13, 29, 255);
 		addGameObject(geldTO, 400, 668);
 
 		aantalVijandenTO = new TextObject("Vijanden verslagen = " + vijandSpawner.getAantalVerslagen(), 22);
-		aantalVijandenTO.setForeColor(153, 0, 255, 255);
+		aantalVijandenTO.setForeColor(23, 13, 29, 255);
 		addGameObject(aantalVijandenTO, 520, 668);
 
 		timerTO = new TextObject("Volgende golf: " + vijandSpawner.getGolfTimer(), 22);
-		timerTO.setForeColor(153, 0, 255, 255);
+		timerTO.setForeColor(23, 13, 29, 255);
 		addGameObject(timerTO, 800, 668);
 	}
 
