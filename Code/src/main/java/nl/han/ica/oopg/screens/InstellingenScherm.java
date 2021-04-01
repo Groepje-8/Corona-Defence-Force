@@ -1,9 +1,6 @@
 package nl.han.ica.oopg.screens;
 
 import java.util.ArrayList;
-import java.util.Objects;
-
-import nl.han.ica.oopg.dashboard.*;
 import nl.han.ica.oopg.sound.Sound;
 import nl.han.ica.oopg.engine.*;
 import nl.han.ica.oopg.objects.*;
@@ -23,10 +20,8 @@ public class InstellingenScherm {
 	private final int yBackKnop = 508;
 	private final int buttonWidth = 300;
 	private final int buttonHeight = 120;
-	private int fontSize;
 
 	public InstellingenScherm() {
-		fontSize = 20;
 
 		createMuziekKnop();
 		createGeluidKnop();
@@ -34,7 +29,6 @@ public class InstellingenScherm {
 		knoppen.add(geluidsKnop);
 		knoppen.add(muziekKnop);
 		knoppen.add(backKnop);
-		// createDashboard();
 
 	}
 
@@ -56,14 +50,14 @@ public class InstellingenScherm {
 
 	public void createGeluidKnop() {
 		geluidsKnop = new Knop(xGeluidKnop, yGeluidKnop, buttonWidth, buttonHeight,
-				"Zet Geluid " + Boolean.toString(!isGeluidAan));
+				"Zet Geluid " + !isGeluidAan);
 		muziekKnop.setForeColor(146, 20, 12, 255);
 	}
 
 	public void createMuziekKnop() {
 
 		muziekKnop = new Knop(xMuziekKnop, yMuziekKnop, buttonWidth, buttonHeight,
-				"Zet Muziek " + Boolean.toString(!isMuziekAan));
+				"Zet Muziek " + !isMuziekAan);
 		muziekKnop.setForeColor(146, 20, 12, 255);
 
 	}
@@ -92,7 +86,7 @@ public class InstellingenScherm {
 			setMuziek();
 
 		}
-		muziekKnop.setText("Zet Muziek " + Boolean.toString(!isMuziekAan));
+		muziekKnop.setText("Zet Muziek " + !isMuziekAan);
 
 	}
 }
