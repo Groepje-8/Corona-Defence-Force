@@ -11,19 +11,19 @@ import nl.han.ica.oopg.objects.SpriteObject;
 import nl.han.ica.oopg.tile.SupermarktTile;
 
 public class Vijand extends SpriteObject implements ICollidableWithTiles {
-	private int levens, beloning;
+	private int levens, beloning, aanvalsKracht;
 	private float xMidden, yMidden;
 	private boolean levend, supermarktBereikt, bevries;
 	private double laatsteLoopTijd;
 	private Spel spel;
 	
-	
-	public Vijand(Spel spel, Sprite sprite, int levens, int snelheid, int beloning) {
+	public Vijand(Spel spel, Sprite sprite, int levens, int snelheid, int beloning, int aanvalsKracht) {
 		super(sprite);
 		setSpeed(snelheid);
 		setDirection(270);
 		this.levens = levens;
 		this.beloning = beloning;
+		this.aanvalsKracht = aanvalsKracht;
 		this.spel = spel;
 		levend = true;
 		supermarktBereikt = false;
@@ -36,7 +36,6 @@ public class Vijand extends SpriteObject implements ICollidableWithTiles {
 		if (this.levens < 1) {
 			levend = false;
 		}
-		
 	}
 	
 	public void lopenLangsPad() {
@@ -62,9 +61,11 @@ public class Vijand extends SpriteObject implements ICollidableWithTiles {
 			setDirection(richting);
 		}
 	}
+	
 	public int getLevens() {
 		return levens;
 	}
+	
 	public void krijgSchade(int schade) {
 		levens -= schade;
 	}
@@ -77,16 +78,21 @@ public class Vijand extends SpriteObject implements ICollidableWithTiles {
 		return levend;
 	}
 	
-	int getBeloning() {
+	public int getBeloning() {
 		return beloning;
 	}
+	
+	public int getAanvalskracht() {
+		return aanvalsKracht;
+	}
+	
 	public float getXMidden() {
 		return this.xMidden;
 	}
+	
 	public float getYMidden() {
 		return this.yMidden;
 	}
-
 	
 	@Override
 	public void tileCollisionOccurred(List<CollidedTile> collidedTiles) {

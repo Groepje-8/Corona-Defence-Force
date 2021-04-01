@@ -34,9 +34,6 @@ public class BuildScreen {
 	}
 
 
-	
-
-
 	public int getX() {
 		return x;
 	}

@@ -6,6 +6,7 @@ import java.util.Objects;
 import nl.han.ica.oopg.dashboard.*;
 import nl.han.ica.oopg.sound.Sound;
 import nl.han.ica.oopg.engine.*;
+import nl.han.ica.oopg.game.Spel;
 import nl.han.ica.oopg.objects.*;
 
 public class InstellingenScherm {
@@ -24,8 +25,11 @@ public class InstellingenScherm {
 	private final int buttonWidth = 300;
 	private final int buttonHeight = 120;
 	private int fontSize;
+	private Spel spel;
 
-	public InstellingenScherm() {
+	public InstellingenScherm(Spel spel) {
+		this.spel = spel;
+		
 		fontSize = 20;
 
 		createMuziekKnop();
@@ -34,8 +38,6 @@ public class InstellingenScherm {
 		knoppen.add(geluidsKnop);
 		knoppen.add(muziekKnop);
 		knoppen.add(backKnop);
-		// createDashboard();
-
 	}
 
 	public void setGeluid() {
@@ -55,21 +57,17 @@ public class InstellingenScherm {
 	}
 
 	public void createGeluidKnop() {
-		geluidsKnop = new Knop(xGeluidKnop, yGeluidKnop, buttonWidth, buttonHeight,
-				"Zet Geluid " + Boolean.toString(!isGeluidAan));
+		geluidsKnop = new Knop(xGeluidKnop, yGeluidKnop, buttonWidth, buttonHeight, "Zet Geluid " + !isGeluidAan, spel);
 		muziekKnop.setForeColor(146, 20, 12, 255);
 	}
 
 	public void createMuziekKnop() {
-
-		muziekKnop = new Knop(xMuziekKnop, yMuziekKnop, buttonWidth, buttonHeight,
-				"Zet Muziek " + Boolean.toString(!isMuziekAan));
+		muziekKnop = new Knop(xMuziekKnop, yMuziekKnop, buttonWidth, buttonHeight, "Zet Muziek " + !isMuziekAan, spel);
 		muziekKnop.setForeColor(146, 20, 12, 255);
-
 	}
 
 	public void createBackKnop() {
-		backKnop = new Knop(xBackKnop, yBackKnop, buttonWidth, buttonHeight, "Ga Terug");
+		backKnop = new Knop(xBackKnop, yBackKnop, buttonWidth, buttonHeight, "Ga Terug", spel);
 		backKnop.setForeColor(146, 20, 12, 255);
 	}
 
@@ -84,7 +82,7 @@ public class InstellingenScherm {
 	public void soundHandler(GameEngine engine, Sound sound) {
 		if (!isMuziekAan) {
 			if (!sound.isPlaying()) {
-				sound.play();// maak looping als hij na 1x stopt (nog niet getest)
+				sound.play(); // maak looping als hij na 1x stopt (nog niet getest)
 				setMuziek();
 			}
 		} else {

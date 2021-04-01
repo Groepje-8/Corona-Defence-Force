@@ -26,8 +26,7 @@ public class VijandSpawner implements IAlarmListener {
 		this.vijandMap = vijandMap;
 		aantalGolven = vijandMap.length;
 		tijdVolgendeGolf = tijdTussenGolven;
-		huidigeGolf = 0;
-		vijandIndex = 0;
+		huidigeGolf = -1;
 		verslagenVijanden = 0;
 	}
 	
@@ -36,11 +35,11 @@ public class VijandSpawner implements IAlarmListener {
 			if (vijand.isLevend() == false) {
 				spel.deleteGameObject(vijand);
 				teVerwijderenVijanden.add(vijand);
-				spel.setGeld(5);
+				spel.voegGeldToe(vijand.getBeloning());
 				verslagenVijanden++;
 			}
 			if (vijand.isSupermarktBereikt() == true) {
-				spel.ontvangSchade(1);
+				spel.ontvangSchade(vijand.getAanvalskracht());
 				spel.deleteGameObject(vijand);
 				teVerwijderenVijanden.add(vijand);
 			}
@@ -52,6 +51,19 @@ public class VijandSpawner implements IAlarmListener {
 			vijanden.remove(vijand);
 		}
 		teVerwijderenVijanden.clear();
+	}
+	
+	public boolean isSpelKlaar() {
+		if (vijanden.size() == 0 && vijandIndex == vijandMap[aantalGolven - 1].length && huidigeGolf == aantalGolven - 1 ) {
+			return true;
+		}
+		return false;
+	}
+	
+	public void beginEersteGolf() {
+		alarmGolf = new Alarm("Nieuwe Golf", tijdTussenGolven);
+	    alarmGolf.addTarget(this);
+	    alarmGolf.start();
 	}
 	
 	public void beginAlarmGolf() {
@@ -108,21 +120,22 @@ public class VijandSpawner implements IAlarmListener {
 	
 	@Override
 	public void triggerAlarm(String alarmName) {
-		if (alarmName == "Nieuwe Vijand") {
+		if (alarmName == "Nieuwe Seconde") {
+			tijdVolgendeGolf--;
+			beginAlarmTimer();
+		}
+		else if (alarmName == "Nieuwe Vijand") {
 			spawnVijand();
 			beginAlarmVijand();
 		}
 		else if (alarmName == "Nieuwe Golf") {
 			volgendeGolf();
 			beginAlarmGolf();
-			if (huidigeGolf == aantalGolven){
+			if (huidigeGolf == aantalGolven - 1){
 				alarmGolf.stop();
+				alarmTimer.stop();
 			}
-			tijdVolgendeGolf = tijdTussenGolven + 1;
-		}
-		else if (alarmName == "Nieuwe Seconde") {
-			tijdVolgendeGolf--;
-			beginAlarmTimer();
+			tijdVolgendeGolf = tijdTussenGolven;
 		}
 	}
 	

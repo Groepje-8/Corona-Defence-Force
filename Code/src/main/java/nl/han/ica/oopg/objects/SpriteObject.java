@@ -40,4 +40,8 @@ public abstract class SpriteObject extends GameObject {
 	{
 		return sprite.getPImage();
 	}
+	
+	public void setSprite(Sprite sprite) {
+		this.sprite = sprite;
+	}
 }

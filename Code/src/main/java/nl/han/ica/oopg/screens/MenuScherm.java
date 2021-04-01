@@ -13,7 +13,8 @@ public class MenuScherm {
 	public Knop instellingenKnop;
 	public Knop startKnop;
 	public ArrayList<Knop> knoppen = new ArrayList<Knop>();
-	//private Knoppen menuDashboard;
+	private Spel spel;
+	
 	private final int xStartKnop = 325;
 	private final int yStartKnop = 430;
 	private final int xInstellingenKnop = 280;
@@ -23,34 +24,23 @@ public class MenuScherm {
 
 	private int fontSize, fontSizeInstellingen;
 
-	public MenuScherm() {
+	public MenuScherm(Spel spel) {
+		this.spel = spel;
+		
 		fontSize = 20;
 		fontSizeInstellingen = 15;
+		
 		createInstellingenKnop();
 		createStartKnop();
+		
 		knoppen.add(instellingenKnop);
 		knoppen.add(startKnop);
-		//createDashboard();
+		
+		
+		
 	}
 
-//	public void gaNaarSpelScherm() {
-//
-//	}
-//
-//	public void gaNaarInstellingenScherm() {
-//
-//	}
 
-	//public Knoppen getDashboard() {
-	//	return menuDashboard;
-	//}
-//
-//	public void createDashboard() {
-//		menuDashboard = new Knoppen(0, 0, 1280, 600);
-//		menuDashboard.addKnop(instellingenKnop, 100);
-//		menuDashboard.addKnop(startKnop, 100);
-//
-//	}
 	public Knop getInstellingenKnop() {
 		return instellingenKnop;
 	}
@@ -62,30 +52,10 @@ public class MenuScherm {
 	}
 
 	public void createInstellingenKnop() {
-
-		instellingenKnop = new Knop(xInstellingenKnop, yInstellingenKnop, buttonWidth, buttonHeight, "Instellingen");
-
+		instellingenKnop = new Knop(xInstellingenKnop, yInstellingenKnop, buttonWidth, buttonHeight, "Instellingen", spel);
 	}
 
 	public void createStartKnop() {
-		startKnop = new Knop(xStartKnop, yStartKnop, buttonWidth, buttonHeight, "Start");
-
-
+		startKnop = new Knop(xStartKnop, yStartKnop, buttonWidth, buttonHeight, "Start", spel);
 	}
-
-	public Sprite createInstructieSheetBG() {
-		Sprite instructieSheetBG = new Sprite(Spel.MEDIA_URL.concat("instructieSheet.jpg"));
-		return instructieSheetBG;
-	}
-
-	public TextObject[] createInstructieSheet() {
-		TextObject instructieSheet[] = { new TextObject("Instructies!", fontSize),
-				new TextObject("Instructie1", fontSizeInstellingen),
-				new TextObject("Instructie2", fontSizeInstellingen),
-				new TextObject("Instructie3", fontSizeInstellingen),
-				new TextObject("Instructie4", fontSizeInstellingen), };
-		return instructieSheet;
-
-	}
-
 }

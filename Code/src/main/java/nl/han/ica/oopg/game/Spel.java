@@ -26,17 +26,20 @@ import nl.han.ica.oopg.vijand.VijandSpawner;
 @SuppressWarnings("serial")
 public class Spel extends GameEngine {
 
-	// public static String MEDIA_URL = "src/main/java/media/";
-	public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
+	public static String MEDIA_URL = "src/main/java/media/";
+	//public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
+	
 	private final int MENUSCHERM = 0;
 	private final int INSTELLINGENSCHERM = 1;
 	private final int SCORESCHERM = 2;
 	private final int SPELSCHERM = 3;
-	private final int TILESIZE = 64;
+	private int state = MENUSCHERM;
+	
 	private final int BUILDSCREENXOFFSET = 135;
 	private final int BUILDSCREENTEXTOFFSET = 90;
 	private final int BUILDSCREENFONTSIZE = 16;
-	private int state = MENUSCHERM;
+	private final int TILESIZE = 64;
+	
 	private InstellingenScherm instellingenScherm;
 	private MenuScherm menuScherm;
 	private VerdedigersLijst verdedigersLijst;
@@ -51,10 +54,11 @@ public class Spel extends GameEngine {
 	int worldHeight = 720;
 
 	private int levens, geld;
-//	private ArrayList<Verdediger> verdedigers;
-//	private ArrayList<Projectiel> projectielen;
+	
 	VijandSpawner vijandSpawner;
-
+	Logo jumboLogo, pause, fastForward;
+	Knop pauseKnop, fastForwardKnop;
+	
 	public static void main(String[] args) {
 		Spel spel = new Spel();
 		spel.runSketch();
@@ -62,8 +66,8 @@ public class Spel extends GameEngine {
 
 	@Override
 	public void setupGame() {
-		instellingenScherm = new InstellingenScherm();
-		menuScherm = new MenuScherm();
+		instellingenScherm = new InstellingenScherm(this);
+		menuScherm = new MenuScherm(this);
 		buildScreen = new BuildScreen();
 
 		backgroundSound = new Sound(this, MEDIA_URL.concat("8bitmusic.mp3"));
@@ -72,7 +76,7 @@ public class Spel extends GameEngine {
 		view = new View(worldWidth, worldHeight);
 		setView(view);
 		size(worldWidth, worldHeight);
-
+		
 		bepaalScherm();
 	}
 
@@ -93,10 +97,11 @@ public class Spel extends GameEngine {
 				vijandSpawner.checkVijandStatus();
 				vijandSpawner.verwijderDodeVijanden();
 				updateGameDetailDashboard();
+				isGameOver();
 			}
 
 			verdedigersLoop();
-			isGameOver();
+			
 
 			break;
 		case SCORESCHERM:
@@ -137,12 +142,11 @@ public class Spel extends GameEngine {
 			levens = 20;
 			view.setBackground(loadImage(MEDIA_URL.concat("SpelBackground.png")));
 
-
 			initializeTileMap();
 			initializeVijandSpawner();
 			initializeMessage();
 
-			vijandSpawner.beginAlarmGolf();
+			vijandSpawner.beginEersteGolf();
 			vijandSpawner.beginAlarmTimer();
 
 			showBuildScreenDashboard();
@@ -151,8 +155,13 @@ public class Spel extends GameEngine {
 			break;
 
 		case SCORESCHERM:
-			state = MENUSCHERM;
-
+			if (vijandSpawner.isSpelKlaar()) {
+				view.setBackground(loadImage(MEDIA_URL.concat("ScoreBackground2.png")));
+			}
+			else {
+				view.setBackground(loadImage(MEDIA_URL.concat("ScoreBackground1.png")));
+			}
+			clearSpelScherm();
 			break;
 
 		default:
@@ -160,6 +169,7 @@ public class Spel extends GameEngine {
 		}
 	}
 
+	// Initialiseer functies
 	private void initializeTileMap() {
 
 		Sprite wegSprite = new Sprite(MEDIA_URL.concat("wegSprite.png"));
@@ -172,80 +182,46 @@ public class Spel extends GameEngine {
 
 		TileType[] tileTypes = { wegTileType, grasTileType, supermarktTileType };
 
-		int tilesMap[][] = { { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-				{ 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 }, { 1, 2, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0 },
-				{ 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1 }, { 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1 },
-				{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 }, { 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
-				{ 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1 }, { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-				{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } };
+		int tilesMap[][] = { 
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 }, 
+			{ 1, 2, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0 },
+			{ 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1 }, 
+			{ 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 1, 1 },
+			{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 }, 
+			{ 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1 },
+			{ 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1 }, 
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+			{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 } 
+		};
 		tileMap = new TileMap(TILESIZE, tileTypes, tilesMap);
-
-		addGameObject(new Logo(new Sprite(MEDIA_URL.concat("jumbo1.png"))), 6, 80);
+		
+		jumboLogo = new Logo(new Sprite(MEDIA_URL.concat("jumbo1.png")));
+		addGameObject(jumboLogo, 6, 80);
 	}
-
+	
 	public void initializeVijandSpawner() {
-		int vijandMap[][] = { { 0, 0, 1, 1, 0 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 } };
+		int vijandMap[][] = { 
+				{ 0, 1, 1, 1, 0 }, 
+				{ 0, 0, 0, 0, 0, 1 }, 
+				{ 0, 0, 0, 0, 0 } };
 		int vijandSpawnX = 15;
 		int vijandSpawnY = 2;
 		int tijdTussenVijanden = 1;
 		int tijdTussenGolven = 15;
 
-		vijandSpawner = new VijandSpawner(this, vijandMap, vijandSpawnX, vijandSpawnY, tijdTussenVijanden,
-				tijdTussenGolven);
+		vijandSpawner = new VijandSpawner(this, vijandMap, vijandSpawnX, vijandSpawnY, tijdTussenVijanden, tijdTussenGolven);
 	}
-
-	public void ontvangSchade(int schade) {
-		levens -= schade;
-	}
-
-	public void gameOver() {
-
-	}
-
-	public void plaatsNieuweVerdediger() {
-
-	}
-
-	public void setGeld(int geld) {
-		this.geld = this.geld + geld;
-	}
-
-	public void setGameSpeed() {
-
-	}
-
-	public void verdedigersLoop() {
-		for (int i = 0; i < verdedigersLijst.getVerdedigers().size(); i++) {
-
-			verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd++;
-			if (verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd > verdedigersLijst.getVerdedigers()
-					.get(i).herlaadTijd) {
-
-				for (int j = 0; j < vijandSpawner.getVijanden().size(); j++) {
-
-					if (vijandSpawner.getVijanden().get(j).getCenterX() < verdedigersLijst.getVerdedigers().get(i)
-							.getCenterX() + verdedigersLijst.getVerdedigers().get(i).radius
-							&& vijandSpawner.getVijanden().get(j).getCenterX() > verdedigersLijst.getVerdedigers()
-									.get(i).getCenterX() - verdedigersLijst.getVerdedigers().get(i).radius
-							&& vijandSpawner.getVijanden().get(j).getCenterY() < verdedigersLijst.getVerdedigers()
-									.get(i).getCenterY() + verdedigersLijst.getVerdedigers().get(i).radius
-							&& vijandSpawner.getVijanden().get(j).getCenterY() > verdedigersLijst.getVerdedigers()
-									.get(i).getCenterY() - verdedigersLijst.getVerdedigers().get(i).radius) {
-						vijandSpawner.getVijanden().get(j)
-								.krijgSchade(verdedigersLijst.getVerdedigers().get(i).aanvalsKracht);
-						verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd = 0;
-						System.out.println(vijandSpawner.getVijanden().get(j).getLevens());
-						System.out.println(vijandSpawner.getVijanden().get(j).isLevend());
-						break;
-
-					}
-
-				}
-			}
-		}
-	}
-
+	
 	private void showGameDetailDashboard() {
+		pause = new Logo(new Sprite(MEDIA_URL.concat("pause.png")));
+		addGameObject(pause, 10, 640);
+		pauseKnop = new Knop(10, 640, 80, 80, "", this);
+		
+		fastForward = new Logo(new Sprite(MEDIA_URL.concat("fastForward.png")));
+		addGameObject(fastForward, 90, 640);
+		fastForwardKnop = new Knop(90, 640, 80, 80, "", this);
+		
 		levensTO = new TextObject("Levens = " + levens, 22);
 		levensTO.setForeColor(23, 13, 29, 255);
 		addGameObject(levensTO, 200, 668);
@@ -261,13 +237,6 @@ public class Spel extends GameEngine {
 		timerTO = new TextObject("Volgende golf: " + vijandSpawner.getGolfTimer(), 22);
 		timerTO.setForeColor(23, 13, 29, 255);
 		addGameObject(timerTO, 800, 668);
-	}
-
-	private void updateGameDetailDashboard() {
-		levensTO.setText("Levens = " + levens);
-		geldTO.setText("$" + geld);
-		aantalVijandenTO.setText("Vijanden verslagen = " + vijandSpawner.getAantalVerslagen());
-		timerTO.setText("Volgende golf: " + vijandSpawner.getGolfTimer());
 	}
 
 	private void showBuildScreenDashboard() {
@@ -306,26 +275,86 @@ public class Spel extends GameEngine {
 	private void clearMessage() {
 		messageTO.setText("");
 	}
-
+	
+	
+	// Update functies
+	public void ontvangSchade(int schade) {
+		levens -= schade;
+	}
+	
+	public void voegGeldToe(int geld) {
+		this.geld = this.geld + geld;
+	}
+	
 	private void isGameOver() {
-		if (levens < 1) {
+		if(levens < 1 || vijandSpawner.isSpelKlaar()) {
 			this.pauseGame();
 			state = SCORESCHERM;
+			bepaalScherm();
 		}
 	}
+	
+	private void updateGameDetailDashboard() {
+		if (levensTO != null) {
+			levensTO.setText("Levens = " + levens);
+			geldTO.setText("$" + geld);
+			aantalVijandenTO.setText("Vijanden verslagen = " + vijandSpawner.getAantalVerslagen());
+			timerTO.setText("Volgende golf: " + vijandSpawner.getGolfTimer());
+		}
+	}
+	
+	public void clearSpelScherm(){
+		int tilesMap[][] = { 
+			{ -1 }
+		};
+		tileMap.setTileMap(tilesMap);
+		
+		deleteAllGameOBjects();
+	}
 
+	public void verdedigersLoop() {
+		for (int i = 0; i < verdedigersLijst.getVerdedigers().size(); i++) {
+
+			verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd++;
+			if (verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd > verdedigersLijst.getVerdedigers()
+					.get(i).herlaadTijd) {
+
+				for (int j = 0; j < vijandSpawner.getVijanden().size(); j++) {
+
+					if (vijandSpawner.getVijanden().get(j).getCenterX() < verdedigersLijst.getVerdedigers().get(i)
+							.getCenterX() + verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterX() > verdedigersLijst.getVerdedigers()
+									.get(i).getCenterX() - verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterY() < verdedigersLijst.getVerdedigers()
+									.get(i).getCenterY() + verdedigersLijst.getVerdedigers().get(i).radius
+							&& vijandSpawner.getVijanden().get(j).getCenterY() > verdedigersLijst.getVerdedigers()
+									.get(i).getCenterY() - verdedigersLijst.getVerdedigers().get(i).radius) {
+						vijandSpawner.getVijanden().get(j)
+								.krijgSchade(verdedigersLijst.getVerdedigers().get(i).aanvalsKracht);
+						verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd = 0;
+						System.out.println(vijandSpawner.getVijanden().get(j).getLevens());
+						System.out.println(vijandSpawner.getVijanden().get(j).isLevend());
+						break;
+
+					}
+
+				}
+			}
+		}
+	}
+	
+	// Knop functies
 	public void mouseClicked() {
 		switch (state) {
 		case MENUSCHERM:
 
-			for (Knop i : menuScherm.getKnoppen()) {
-				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
-						&& mouseY < (i.getY() + i.getHeight())) {
-					if (i.equals(menuScherm.instellingenKnop)) {
+			for (Knop knop : menuScherm.getKnoppen()) {
+				if (knop.isKnopClicked()) {
+					if (knop.equals(menuScherm.instellingenKnop)) {
 						state = INSTELLINGENSCHERM;
 						bepaalScherm();
 					}
-					if (i.equals(menuScherm.startKnop)) {
+					if (knop.equals(menuScherm.startKnop)) {
 						state = SPELSCHERM;
 						bepaalScherm();
 					}
@@ -336,23 +365,21 @@ public class Spel extends GameEngine {
 
 		case INSTELLINGENSCHERM:
 
-			for (GameObject i : instellingenScherm.getKnoppen()) {
+			for (Knop knop : instellingenScherm.getKnoppen()) {
 
-				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
-						&& mouseY < (i.getY() + i.getHeight())) {
+				if (knop.isKnopClicked()) {
 
-					if (i.equals(instellingenScherm.backKnop)) {
+					if (knop.equals(instellingenScherm.backKnop)) {
 						state = MENUSCHERM;
 						bepaalScherm();
 					}
 
-					if (i.equals(instellingenScherm.geluidsKnop)) {
+					if (knop.equals(instellingenScherm.geluidsKnop)) {
 
 					}
 
-					if (i.equals(instellingenScherm.muziekKnop)) {
+					if (knop.equals(instellingenScherm.muziekKnop)) {
 						instellingenScherm.soundHandler(this, backgroundSound);
-
 					}
 
 				}
@@ -361,7 +388,29 @@ public class Spel extends GameEngine {
 
 			break;
 		case SPELSCHERM:
+			
+			if (pauseKnop.isKnopClicked()){
+				if (getThreadState()) {
+					resumeGame();
+					pause.setSprite(new Sprite(MEDIA_URL.concat("pause.png")));
+				}
+				else {
+					pauseGame();
+					pause.setSprite(new Sprite(MEDIA_URL.concat("play.png")));
+				}
+			}
 
+			if (fastForwardKnop.isKnopClicked()){
+				if (getGameSpeed() == 60){
+					setGameSpeed(120);
+					fastForward.setSprite(new Sprite(MEDIA_URL.concat("play.png")));
+				}
+				else {
+					setGameSpeed(60);
+					fastForward.setSprite(new Sprite(MEDIA_URL.concat("fastForward.png")));
+				}
+			}
+			
 			for (Verdediger i : buildScreen.Verdedigers) {
 				System.out.println(i.getX());
 				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
