@@ -2,6 +2,8 @@ package nl.han.ica.oopg.screens;
 
 import java.util.ArrayList;
 
+import nl.han.ica.oopg.game.Spel;
+
 public class MenuScherm {
 
 	public Knop instellingenKnop;
