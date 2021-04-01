@@ -1,5 +1,6 @@
 package nl.han.ica.oopg.screens;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import nl.han.ica.oopg.dashboard.*;
@@ -10,27 +11,30 @@ import nl.han.ica.oopg.objects.*;
 public class InstellingenScherm {
 	public boolean isGeluidAan;
 	public boolean isMuziekAan;
-	public Knoppen instellingenDashboard;
 	public Knop muziekKnop;
 	public Knop geluidsKnop;
 	public Knop backKnop;
-	private final int xGeluidKnop = 570;
-	private final int yGeluidKnop = 250;
-	private final int xMuziekKnop = 570;
-	private final int yMuziekKnop = 350;
-	private final int xBackKnop = 570;
-	private final int yBackKnop = 450;
-	private final int buttonWidth = 100;
-	private final int buttonHeight = 100;
+	public ArrayList<Knop> knoppen = new ArrayList<Knop>();
+	private final int xGeluidKnop = 260;
+	private final int yGeluidKnop = 350;
+	private final int xMuziekKnop = 260;
+	private final int yMuziekKnop = 430;
+	private final int xBackKnop = 290;
+	private final int yBackKnop = 508;
+	private final int buttonWidth = 300;
+	private final int buttonHeight = 120;
 	private int fontSize;
 
 	public InstellingenScherm() {
 		fontSize = 20;
-		
+
 		createMuziekKnop();
 		createGeluidKnop();
 		createBackKnop();
-		createDashboard();
+		knoppen.add(geluidsKnop);
+		knoppen.add(muziekKnop);
+		knoppen.add(backKnop);
+		// createDashboard();
 
 	}
 
@@ -73,19 +77,11 @@ public class InstellingenScherm {
 		return muziekKnop;
 	}
 
-	public void createDashboard() {
-		instellingenDashboard = new Knoppen(0, 0, 1280, 600);
-		instellingenDashboard.addKnop(muziekKnop, 100);
-		instellingenDashboard.addKnop(geluidsKnop, 100);
-		instellingenDashboard.addKnop(backKnop, 100);
-
+	public ArrayList<Knop> getKnoppen() {
+		return knoppen;
 	}
 
-	public Knoppen getDashboard() {
-		return instellingenDashboard;
-	}
-
-	public void soundHandler(GameEngine engine,Sound sound) {
+	public void soundHandler(GameEngine engine, Sound sound) {
 		if (!isMuziekAan) {
 			if (!sound.isPlaying()) {
 				sound.play();// maak looping als hij na 1x stopt (nog niet getest)

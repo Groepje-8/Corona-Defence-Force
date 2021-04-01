@@ -13,14 +13,14 @@ import nl.han.ica.oopg.verdediger.Waterkanon;
 
 public class BuildScreen {
 	public ArrayList<Verdediger> Verdedigers = new ArrayList<Verdediger>();
-	Dashboard screen;
+
 	private int x = 1024;
 	private int y = 0;
 	private int width = 256;
 	private int height = 720;
 	
 	public BuildScreen(){
-		screen = new Dashboard(x, y, width, height);
+
 		fillVerdedigers();
 		
 	}
@@ -35,9 +35,7 @@ public class BuildScreen {
 
 
 	
-	public Dashboard getBuildScreen() {
-		return screen;
-	}
+
 
 	public int getX() {
 		return x;

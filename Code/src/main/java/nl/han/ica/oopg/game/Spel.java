@@ -9,6 +9,7 @@ import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.objects.TextObject;
 import nl.han.ica.oopg.screens.BuildScreen;
 import nl.han.ica.oopg.screens.InstellingenScherm;
+import nl.han.ica.oopg.screens.Knop;
 import nl.han.ica.oopg.screens.MenuScherm;
 import nl.han.ica.oopg.sound.Sound;
 import nl.han.ica.oopg.tile.GrasTile;
@@ -25,8 +26,8 @@ import nl.han.ica.oopg.vijand.VijandSpawner;
 @SuppressWarnings("serial")
 public class Spel extends GameEngine {
 
-	public static String MEDIA_URL = "src/main/java/media/";
-	//public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
+	// public static String MEDIA_URL = "src/main/java/media/";
+	public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
 	private final int MENUSCHERM = 0;
 	private final int INSTELLINGENSCHERM = 1;
 	private final int SCORESCHERM = 2;
@@ -38,7 +39,6 @@ public class Spel extends GameEngine {
 	private int state = MENUSCHERM;
 	private InstellingenScherm instellingenScherm;
 	private MenuScherm menuScherm;
-	private Dashboard dashboard;
 	private VerdedigersLijst verdedigersLijst;
 	private BuildScreen buildScreen;
 	private Verdediger selectedVerdediger;
@@ -111,28 +111,32 @@ public class Spel extends GameEngine {
 
 		switch (state) {
 		case MENUSCHERM:
-
+			this.deleteAllGameObjectsOfType(Knop.class);
 			view.setBackground(loadImage(MEDIA_URL.concat("MenuBackground.png")));
-			dashboard = menuScherm.getDashboard();
-			addDashboard(dashboard);
 
+			addGameObject(menuScherm.getInstellingenKnop());
+			addGameObject(menuScherm.getStartKnop());
+			
 			break;
 
 		case INSTELLINGENSCHERM:
 			
+            this.deleteAllGameObjectsOfType(Knop.class);
+            for(Knop i : instellingenScherm.getKnoppen()) {
+            	addGameObject(i);
+            }
+            
 			view.setBackground(loadImage(MEDIA_URL.concat("InstellingenBackground.png")));
-			dashboard = instellingenScherm.getDashboard();
-			addDashboard(dashboard);
+
 
 			break;
 
 		case SPELSCHERM:
-
+			this.deleteAllGameObjectsOfType(Knop.class);
 			geld = 100;
 			levens = 20;
 			view.setBackground(loadImage(MEDIA_URL.concat("SpelBackground.png")));
-			
-			deleteAllDashboards();
+
 
 			initializeTileMap();
 			initializeVijandSpawner();
@@ -201,6 +205,7 @@ public class Spel extends GameEngine {
 	public void plaatsNieuweVerdediger() {
 
 	}
+
 	public void setGeld(int geld) {
 		this.geld = this.geld + geld;
 	}
@@ -275,16 +280,16 @@ public class Spel extends GameEngine {
 
 			TextObject naam = new TextObject(buildScreen.Verdedigers.get(i).getNaam(), BUILDSCREENFONTSIZE);
 			naam.setForeColor(255, 255, 255, 255);
-			x = buildScreen.getX() + (BUILDSCREENXOFFSET * (i % 2))+ 12;
-			y = BUILDSCREENTEXTOFFSET + ((i / 2) | 0) * BUILDSCREENXOFFSET+ 15;
+			x = buildScreen.getX() + (BUILDSCREENXOFFSET * (i % 2)) + 12;
+			y = BUILDSCREENTEXTOFFSET + ((i / 2) | 0) * BUILDSCREENXOFFSET + 15;
 			addGameObject(naam, x, y, 101);
 
 			TextObject prijs = new TextObject("Cost: " + Integer.toString(buildScreen.Verdedigers.get(i).getPrijs()),
 					BUILDSCREENFONTSIZE);
 			prijs.setForeColor(255, 255, 255, 255);
-			x = buildScreen.getX() + (BUILDSCREENXOFFSET * (i % 2))+ 12;
-			y = 20 + BUILDSCREENTEXTOFFSET + ((i / 2) | 0) * BUILDSCREENXOFFSET+ 15;
-			addGameObject(prijs, x,	y, 101);
+			x = buildScreen.getX() + (BUILDSCREENXOFFSET * (i % 2)) + 12;
+			y = 20 + BUILDSCREENTEXTOFFSET + ((i / 2) | 0) * BUILDSCREENXOFFSET + 15;
+			addGameObject(prijs, x, y, 101);
 		}
 	}
 
@@ -297,11 +302,13 @@ public class Spel extends GameEngine {
 	private void showMessage(String x) {
 		messageTO.setText(x);
 	}
+
 	private void clearMessage() {
 		messageTO.setText("");
 	}
+
 	private void isGameOver() {
-		if(levens < 1) {
+		if (levens < 1) {
 			this.pauseGame();
 			state = SCORESCHERM;
 		}
@@ -311,7 +318,7 @@ public class Spel extends GameEngine {
 		switch (state) {
 		case MENUSCHERM:
 
-			for (GameObject i : dashboard.getGameObjects()) {
+			for (Knop i : menuScherm.getKnoppen()) {
 				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
 						&& mouseY < (i.getY() + i.getHeight())) {
 					if (i.equals(menuScherm.instellingenKnop)) {
@@ -329,7 +336,7 @@ public class Spel extends GameEngine {
 
 		case INSTELLINGENSCHERM:
 
-			for (GameObject i : dashboard.getGameObjects()) {
+			for (GameObject i : instellingenScherm.getKnoppen()) {
 
 				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
 						&& mouseY < (i.getY() + i.getHeight())) {
@@ -356,27 +363,30 @@ public class Spel extends GameEngine {
 		case SPELSCHERM:
 
 			for (Verdediger i : buildScreen.Verdedigers) {
+				System.out.println(i.getX());
 				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
 						&& mouseY < (i.getY() + i.getHeight())) {
-					this.selectedVerdediger = new Verdediger(i);
+				//	this.selectedVerdediger = clone(i);
 					System.out.println(i.naam + " geselecteerd");
 					clearMessage();
 
 				}
 
 			}
+		
 
 			if (selectedVerdediger != null && mouseX < (16 * tileMap.getTileSize())
 					&& mouseY < (10 * tileMap.getTileSize())) {
 				if (tileMap.getTileOnPosition(mouseX, mouseY) != null) {
 					if (tileMap.getTileOnPosition(mouseX, mouseY) instanceof GrasTile) {
-						if (geld - selectedVerdediger.prijs > 0) {
+						if (geld - selectedVerdediger.prijs >= 0) {
 							System.out.println(selectedVerdediger.naam + "geplaatst");
 							verdedigersLijst.addVerdediger(new Verdediger(selectedVerdediger),
 									tileMap.getTilePixelLocation(tileMap.getTileOnPosition(mouseX, mouseY)));
 							geld -= selectedVerdediger.prijs;
-
-							this.selectedVerdediger = null;
+//							selectedVerdediger.resize(90);
+//							this.selectedVerdediger = null;
+//							((Verdediger) this.getGameObjectItems().get(this.getGameObjectItems().size()-1)).resize(TILESIZE);
 							clearMessage();
 						} else {
 							showMessage("Niet genoeg geld");
@@ -390,6 +400,9 @@ public class Spel extends GameEngine {
 				}
 
 			}
+			break;
+		default:
+			state = MENUSCHERM;
 			break;
 		}
 

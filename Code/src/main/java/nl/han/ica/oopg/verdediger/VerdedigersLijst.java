@@ -12,7 +12,7 @@ public class VerdedigersLijst {
 	private Spel spel;
 	private int tileSize;
 	private Verdediger[][] verdedigerMap;
-	private ArrayList<Verdediger> verdedigers = new ArrayList();
+	private ArrayList<Verdediger> verdedigers = new ArrayList<Verdediger>();
 
 	public VerdedigersLijst(Spel spel, int tileSize) {
 		this.spel = spel;

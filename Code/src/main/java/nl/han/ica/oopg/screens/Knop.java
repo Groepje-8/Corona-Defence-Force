@@ -18,7 +18,7 @@ public class Knop extends GameObject {
 	public Knop(int x, int y, int hoogte, int breedte, String text) {
 		super(x, y, hoogte, breedte);
 		this.text = text;
-		fontSize = 20;
+		fontSize = 30;
 
 	}
 
