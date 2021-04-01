@@ -2,14 +2,8 @@ package nl.han.ica.oopg.screens;
 
 import java.util.ArrayList;
 
-import nl.han.ica.oopg.dashboard.*;
-import nl.han.ica.oopg.game.Spel;
-import nl.han.ica.oopg.objects.GameObject;
-import nl.han.ica.oopg.objects.Sprite;
-import nl.han.ica.oopg.objects.TextObject;
-
 public class MenuScherm {
-	private TextObject dashboardText;
+
 	public Knop instellingenKnop;
 	public Knop startKnop;
 	public ArrayList<Knop> knoppen = new ArrayList<Knop>();
@@ -35,19 +29,18 @@ public class MenuScherm {
 		
 		knoppen.add(instellingenKnop);
 		knoppen.add(startKnop);
-		
-		
-		
 	}
 
 
 	public Knop getInstellingenKnop() {
 		return instellingenKnop;
 	}
+
 	public Knop getStartKnop() {
 		return startKnop;
 	}
-	public ArrayList<Knop> getKnoppen(){
+
+	public ArrayList<Knop> getKnoppen() {
 		return knoppen;
 	}
 

@@ -1,13 +1,12 @@
 package nl.han.ica.oopg.game;
 
-import java.util.ArrayList;
 
-import nl.han.ica.oopg.dashboard.Dashboard;
 import nl.han.ica.oopg.engine.GameEngine;
 import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.objects.TextObject;
 import nl.han.ica.oopg.screens.BuildScreen;
+import nl.han.ica.oopg.screens.Buildable;
 import nl.han.ica.oopg.screens.InstellingenScherm;
 import nl.han.ica.oopg.screens.Knop;
 import nl.han.ica.oopg.screens.MenuScherm;
@@ -240,20 +239,20 @@ public class Spel extends GameEngine {
 	}
 
 	private void showBuildScreenDashboard() {
-		for (int i = 0; i < buildScreen.Verdedigers.size(); i++) {
+		for (int i = 0; i < buildScreen.Buildables.size(); i++) {
 
 			int x = buildScreen.getX() + (BUILDSCREENXOFFSET * (i % 2)) + 12;
 			int y = ((i / 2) | 0) * BUILDSCREENXOFFSET + 15;
 
-			addGameObject(buildScreen.Verdedigers.get(i), x, y, 101);
+			addGameObject(buildScreen.Buildables.get(i), x, y, 101);
 
-			TextObject naam = new TextObject(buildScreen.Verdedigers.get(i).getNaam(), BUILDSCREENFONTSIZE);
+			TextObject naam = new TextObject(buildScreen.Buildables.get(i).getVerdediger().getNaam(), BUILDSCREENFONTSIZE);
 			naam.setForeColor(255, 255, 255, 255);
 			x = buildScreen.getX() + (BUILDSCREENXOFFSET * (i % 2)) + 12;
 			y = BUILDSCREENTEXTOFFSET + ((i / 2) | 0) * BUILDSCREENXOFFSET + 15;
 			addGameObject(naam, x, y, 101);
 
-			TextObject prijs = new TextObject("Cost: " + Integer.toString(buildScreen.Verdedigers.get(i).getPrijs()),
+			TextObject prijs = new TextObject("Cost: " + Integer.toString(buildScreen.Buildables.get(i).getVerdediger().getPrijs()),
 					BUILDSCREENFONTSIZE);
 			prijs.setForeColor(255, 255, 255, 255);
 			x = buildScreen.getX() + (BUILDSCREENXOFFSET * (i % 2)) + 12;
@@ -413,10 +412,13 @@ public class Spel extends GameEngine {
 			
 			for (Verdediger i : buildScreen.Verdedigers) {
 				System.out.println(i.getX());
+			}
+			for (Buildable i : buildScreen.Buildables) {
+				
 				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
 						&& mouseY < (i.getY() + i.getHeight())) {
-				//	this.selectedVerdediger = clone(i);
-					System.out.println(i.naam + " geselecteerd");
+					this.selectedVerdediger = i.getVerdediger();
+					System.out.println(i.getVerdediger().getNaam() + " geselecteerd");
 					clearMessage();
 
 				}
@@ -433,9 +435,6 @@ public class Spel extends GameEngine {
 							verdedigersLijst.addVerdediger(new Verdediger(selectedVerdediger),
 									tileMap.getTilePixelLocation(tileMap.getTileOnPosition(mouseX, mouseY)));
 							geld -= selectedVerdediger.prijs;
-//							selectedVerdediger.resize(90);
-//							this.selectedVerdediger = null;
-//							((Verdediger) this.getGameObjectItems().get(this.getGameObjectItems().size()-1)).resize(TILESIZE);
 							clearMessage();
 						} else {
 							showMessage("Niet genoeg geld");
@@ -454,6 +453,5 @@ public class Spel extends GameEngine {
 			state = MENUSCHERM;
 			break;
 		}
-
 	}
 }

@@ -1,9 +1,6 @@
 package nl.han.ica.oopg.screens;
 
 import java.util.ArrayList;
-import java.util.Objects;
-
-import nl.han.ica.oopg.dashboard.*;
 import nl.han.ica.oopg.sound.Sound;
 import nl.han.ica.oopg.engine.*;
 import nl.han.ica.oopg.game.Spel;
@@ -90,7 +87,7 @@ public class InstellingenScherm {
 			setMuziek();
 
 		}
-		muziekKnop.setText("Zet Muziek " + Boolean.toString(!isMuziekAan));
+		muziekKnop.setText("Zet Muziek " + !isMuziekAan);
 
 	}
 }

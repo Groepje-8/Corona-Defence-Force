@@ -1,7 +1,6 @@
 package nl.han.ica.oopg.verdediger;
 
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
+
 
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.objects.SpriteObject;
@@ -17,8 +16,6 @@ public class Verdediger extends SpriteObject {
 	
 	Verdediger(Sprite sprite, int prijs, int radius, int aanvalsKracht, String naam, double laatsteAanvaltijd, double herlaadTijd) {
 		super(sprite);
-		super.setHeight(90);
-		super.setWidth(90);
 		this.x = getCenterX();
 		this.y = getCenterY();
 		this.prijs = prijs;
@@ -67,11 +64,6 @@ public class Verdediger extends SpriteObject {
 	}
 
 
-//	@Override
-//	public void draw(PGraphics g) {
-//
-//	}
-//
 	@Override
 	public void update() {
 
