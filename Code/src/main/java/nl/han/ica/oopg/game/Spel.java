@@ -331,6 +331,7 @@ public class Spel extends GameEngine {
 						vijandSpawner.getVijanden().get(j)
 								.krijgSchade(verdedigersLijst.getVerdedigers().get(i).aanvalsKracht);
 						verdedigersLijst.getVerdedigers().get(i).laatsteAanvaltijd = 0;
+						//verdedigersLijst.getVerdedigers().get(i).schieten(vijandSpawner.getVijanden().get(j));
 						System.out.println(vijandSpawner.getVijanden().get(j).getLevens());
 						System.out.println(vijandSpawner.getVijanden().get(j).isLevend());
 						break;
@@ -418,8 +419,8 @@ public class Spel extends GameEngine {
 				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
 						&& mouseY < (i.getY() + i.getHeight())) {
 					this.selectedVerdediger = i.getVerdediger();
-					System.out.println(i.getVerdediger().getNaam() + " geselecteerd");
-					clearMessage();
+					showMessage(i.getVerdediger().getNaam() + " geselecteerd");
+					//clearMessage();
 
 				}
 
@@ -431,11 +432,11 @@ public class Spel extends GameEngine {
 				if (tileMap.getTileOnPosition(mouseX, mouseY) != null) {
 					if (tileMap.getTileOnPosition(mouseX, mouseY) instanceof GrasTile) {
 						if (geld - selectedVerdediger.prijs >= 0) {
-							System.out.println(selectedVerdediger.naam + "geplaatst");
+							showMessage(selectedVerdediger.naam + " geplaatst");
 							verdedigersLijst.addVerdediger(new Verdediger(selectedVerdediger),
 									tileMap.getTilePixelLocation(tileMap.getTileOnPosition(mouseX, mouseY)));
 							geld -= selectedVerdediger.prijs;
-							clearMessage();
+							//clearMessage();
 						} else {
 							showMessage("Niet genoeg geld");
 						}

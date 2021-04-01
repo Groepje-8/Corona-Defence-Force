@@ -12,7 +12,7 @@ public class Waterkanon extends Verdediger implements IAanval {
 	private static String naam = "Waterkanon";
 
 	public Waterkanon() {
-		super(new Sprite(Spel.MEDIA_URL.concat("AntivaxMoeder.png")), prijs, radius, schade, naam, 0, herlaadTijd);
+		super(new Sprite(Spel.MEDIA_URL.concat("WaterKannon1.png")), prijs, radius, schade, naam, 0, herlaadTijd);
 
 	}
 

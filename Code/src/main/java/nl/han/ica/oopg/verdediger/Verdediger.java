@@ -4,9 +4,10 @@ package nl.han.ica.oopg.verdediger;
 
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.objects.SpriteObject;
+import nl.han.ica.oopg.vijand.Vijand;
 import processing.core.PImage;
 
-public class Verdediger extends SpriteObject {
+public class Verdediger extends SpriteObject implements IAanval{
 
 	public int prijs, radius, aanvalsKracht;
 	public float x, y;
@@ -64,9 +65,15 @@ public class Verdediger extends SpriteObject {
 	}
 
 
+
 	@Override
 	public void update() {
 
+	}
+	@Override
+	public void schieten(Vijand vijand) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

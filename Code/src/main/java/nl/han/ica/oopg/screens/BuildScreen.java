@@ -7,6 +7,7 @@ import nl.han.ica.oopg.game.Spel;
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.verdediger.Dokter;
 import nl.han.ica.oopg.verdediger.PolitieAgent;
+import nl.han.ica.oopg.verdediger.Sniper;
 import nl.han.ica.oopg.verdediger.Verdediger;
 import nl.han.ica.oopg.verdediger.Waterkanon;
 
@@ -29,18 +30,22 @@ public class BuildScreen {
 		PolitieAgent politieAgent = new PolitieAgent();
 		Dokter dokter = new Dokter();
 		Waterkanon waterkanon = new Waterkanon();
+		Sniper sniper = new Sniper();
 		
 		
 		Buildable politieAgentBuildable = new Buildable(new Sprite(Spel.MEDIA_URL.concat("PolitieAgent1.png")),politieAgent);
 		Buildable dokterBuildable = new Buildable(new Sprite(Spel.MEDIA_URL.concat("Dokter1.png")),dokter);
-		Buildable waterkanonBuildable = new Buildable(new Sprite(Spel.MEDIA_URL.concat("AntivaxMoeder.png")),waterkanon);
+		Buildable waterkanonBuildable = new Buildable(new Sprite(Spel.MEDIA_URL.concat("WaterKannon1.png")),waterkanon);
+		Buildable sniperBuildable = new Buildable(new Sprite(Spel.MEDIA_URL.concat("Sniper1.png")),sniper);
 		
 		Verdedigers.add(politieAgent);
 		Verdedigers.add(dokter);
 		Verdedigers.add(waterkanon);
+		Verdedigers.add(sniper);
 		Buildables.add(politieAgentBuildable);
 		Buildables.add(waterkanonBuildable);
 		Buildables.add(dokterBuildable);
+		Buildables.add(sniperBuildable);
 		
 	}
 
