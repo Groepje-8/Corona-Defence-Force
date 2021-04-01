@@ -48,7 +48,7 @@ public class Knop extends GameObject {
 		this.alpha = alpha;
 	}
 	
-	public boolean isKnopClicked() {
+	public boolean isKnopGeklikt() {
 		if (spel.mouseX > x && spel.mouseX < (x + width) && spel.mouseY > y && spel.mouseY < (y + height)) {
 			return true;
 		}

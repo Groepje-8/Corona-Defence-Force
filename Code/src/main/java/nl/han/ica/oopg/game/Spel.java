@@ -10,6 +10,8 @@ import nl.han.ica.oopg.screens.Buildable;
 import nl.han.ica.oopg.screens.InstellingenScherm;
 import nl.han.ica.oopg.screens.Knop;
 import nl.han.ica.oopg.screens.MenuScherm;
+import nl.han.ica.oopg.screens.ScoreScherm;
+import nl.han.ica.oopg.screens.SpelScherm;
 import nl.han.ica.oopg.sound.Sound;
 import nl.han.ica.oopg.tile.GrasTile;
 import nl.han.ica.oopg.tile.Logo;
@@ -32,15 +34,18 @@ public class Spel extends GameEngine {
 	private final int INSTELLINGENSCHERM = 1;
 	private final int SCORESCHERM = 2;
 	private final int SPELSCHERM = 3;
-	private int state = MENUSCHERM;
+	private int state;
 	
 	private final int BUILDSCREENXOFFSET = 135;
 	private final int BUILDSCREENTEXTOFFSET = 90;
 	private final int BUILDSCREENFONTSIZE = 16;
 	private final int TILESIZE = 64;
 	
-	private InstellingenScherm instellingenScherm;
 	private MenuScherm menuScherm;
+	private InstellingenScherm instellingenScherm;
+	private SpelScherm spelScherm;
+	private ScoreScherm scoreScherm;
+	
 	private VerdedigersLijst verdedigersLijst;
 	private BuildScreen buildScreen;
 	private Verdediger selectedVerdediger;
@@ -55,7 +60,7 @@ public class Spel extends GameEngine {
 	private int levens, geld;
 	
 	VijandSpawner vijandSpawner;
-	Logo jumboLogo, pause, fastForward;
+	Logo pause, fastForward;
 	Knop pauseKnop, fastForwardKnop;
 	
 	public static void main(String[] args) {
@@ -65,10 +70,14 @@ public class Spel extends GameEngine {
 
 	@Override
 	public void setupGame() {
-		instellingenScherm = new InstellingenScherm(this);
+		state = MENUSCHERM;
+		
 		menuScherm = new MenuScherm(this);
+		instellingenScherm = new InstellingenScherm(this);
+		spelScherm = new SpelScherm(this);
+		scoreScherm = new ScoreScherm(this);
 		buildScreen = new BuildScreen();
-
+		
 		backgroundSound = new Sound(this, MEDIA_URL.concat("8bitmusic.mp3"));
 		verdedigersLijst = new VerdedigersLijst(this, TILESIZE);
 
@@ -100,11 +109,9 @@ public class Spel extends GameEngine {
 			}
 
 			verdedigersLoop();
-			
-
 			break;
+			
 		case SCORESCHERM:
-			state = MENUSCHERM;
 
 			break;
 
@@ -115,7 +122,8 @@ public class Spel extends GameEngine {
 
 		switch (state) {
 		case MENUSCHERM:
-			this.deleteAllGameObjectsOfType(Knop.class);
+			deleteAllGameOBjects();
+			
 			view.setBackground(loadImage(MEDIA_URL.concat("MenuBackground.png")));
 
 			addGameObject(menuScherm.getInstellingenKnop());
@@ -124,43 +132,49 @@ public class Spel extends GameEngine {
 			break;
 
 		case INSTELLINGENSCHERM:
+			deleteAllGameOBjects();
 			
-            this.deleteAllGameObjectsOfType(Knop.class);
-            for(Knop i : instellingenScherm.getKnoppen()) {
-            	addGameObject(i);
-            }
-            
 			view.setBackground(loadImage(MEDIA_URL.concat("InstellingenBackground.png")));
-
-
+			
+            addGameObject(instellingenScherm.getMuziekKnop());
+			addGameObject(instellingenScherm.getGeluidKnop());
+			addGameObject(instellingenScherm.getBackKnop());
+			
 			break;
 
 		case SPELSCHERM:
-			this.deleteAllGameObjectsOfType(Knop.class);
-			geld = 100;
-			levens = 20;
+			deleteAllGameOBjects();
+			
 			view.setBackground(loadImage(MEDIA_URL.concat("SpelBackground.png")));
-
+			geld = 100;
+			levens = 10;
+			
 			initializeTileMap();
 			initializeVijandSpawner();
 			initializeMessage();
-
-			vijandSpawner.beginEersteGolf();
-			vijandSpawner.beginAlarmTimer();
-
+			
 			showBuildScreenDashboard();
 			showGameDetailDashboard();
+
+			vijandSpawner.beginAlarmGolf();
+			vijandSpawner.beginAlarmTimer();
 
 			break;
 
 		case SCORESCHERM:
+			deleteAllGameOBjects();
+			clearTileMap();
+			
 			if (vijandSpawner.isSpelKlaar()) {
 				view.setBackground(loadImage(MEDIA_URL.concat("ScoreBackground2.png")));
 			}
 			else {
 				view.setBackground(loadImage(MEDIA_URL.concat("ScoreBackground1.png")));
 			}
-			clearSpelScherm();
+			
+			addGameObject(scoreScherm.getTerugKnop());
+			addGameObject(aantalVijandenTO, 240, 470);
+			
 			break;
 
 		default:
@@ -195,8 +209,14 @@ public class Spel extends GameEngine {
 		};
 		tileMap = new TileMap(TILESIZE, tileTypes, tilesMap);
 		
-		jumboLogo = new Logo(new Sprite(MEDIA_URL.concat("jumbo1.png")));
-		addGameObject(jumboLogo, 6, 80);
+		addGameObject(new Logo(new Sprite(MEDIA_URL.concat("jumbo1.png"))), 6, 80);
+	}
+
+	public void clearTileMap(){
+		int tilesMap[][] = { 
+			{ -1 }
+		};
+		tileMap.setTileMap(tilesMap);
 	}
 	
 	public void initializeVijandSpawner() {
@@ -215,11 +235,9 @@ public class Spel extends GameEngine {
 	private void showGameDetailDashboard() {
 		pause = new Logo(new Sprite(MEDIA_URL.concat("pause.png")));
 		addGameObject(pause, 10, 640);
-		pauseKnop = new Knop(10, 640, 80, 80, "", this);
 		
 		fastForward = new Logo(new Sprite(MEDIA_URL.concat("fastForward.png")));
 		addGameObject(fastForward, 90, 640);
-		fastForwardKnop = new Knop(90, 640, 80, 80, "", this);
 		
 		levensTO = new TextObject("Levens = " + levens, 22);
 		levensTO.setForeColor(23, 13, 29, 255);
@@ -301,15 +319,6 @@ public class Spel extends GameEngine {
 			timerTO.setText("Volgende golf: " + vijandSpawner.getGolfTimer());
 		}
 	}
-	
-	public void clearSpelScherm(){
-		int tilesMap[][] = { 
-			{ -1 }
-		};
-		tileMap.setTileMap(tilesMap);
-		
-		deleteAllGameOBjects();
-	}
 
 	public void verdedigersLoop() {
 		for (int i = 0; i < verdedigersLijst.getVerdedigers().size(); i++) {
@@ -348,48 +357,32 @@ public class Spel extends GameEngine {
 		switch (state) {
 		case MENUSCHERM:
 
-			for (Knop knop : menuScherm.getKnoppen()) {
-				if (knop.isKnopClicked()) {
-					if (knop.equals(menuScherm.instellingenKnop)) {
-						state = INSTELLINGENSCHERM;
-						bepaalScherm();
-					}
-					if (knop.equals(menuScherm.startKnop)) {
-						state = SPELSCHERM;
-						bepaalScherm();
-					}
-
-				}
+			if (menuScherm.getInstellingenKnop().isKnopGeklikt()) {
+				state = INSTELLINGENSCHERM;
+				bepaalScherm();
+			}
+			if (menuScherm.getStartKnop().isKnopGeklikt()) {
+				state = SPELSCHERM;
+				bepaalScherm();
 			}
 			break;
 
 		case INSTELLINGENSCHERM:
-
-			for (Knop knop : instellingenScherm.getKnoppen()) {
-
-				if (knop.isKnopClicked()) {
-
-					if (knop.equals(instellingenScherm.backKnop)) {
-						state = MENUSCHERM;
-						bepaalScherm();
-					}
-
-					if (knop.equals(instellingenScherm.geluidsKnop)) {
-
-					}
-
-					if (knop.equals(instellingenScherm.muziekKnop)) {
-						instellingenScherm.soundHandler(this, backgroundSound);
-					}
-
-				}
-
+			if (instellingenScherm.getMuziekKnop().isKnopGeklikt()) {
+				instellingenScherm.soundHandler(this, backgroundSound);
 			}
-
+			if (instellingenScherm.getGeluidKnop().isKnopGeklikt()) {
+				
+			}
+			if (instellingenScherm.getBackKnop().isKnopGeklikt()) {
+				state = MENUSCHERM;
+				bepaalScherm();
+			}
 			break;
+			
 		case SPELSCHERM:
 			
-			if (pauseKnop.isKnopClicked()){
+			if (spelScherm.getPauseKnop().isKnopGeklikt()){
 				if (getThreadState()) {
 					resumeGame();
 					pause.setSprite(new Sprite(MEDIA_URL.concat("pause.png")));
@@ -400,7 +393,7 @@ public class Spel extends GameEngine {
 				}
 			}
 
-			if (fastForwardKnop.isKnopClicked()){
+			if (spelScherm.getFastForwardKnop().isKnopGeklikt()){
 				if (getGameSpeed() == 60){
 					setGameSpeed(120);
 					fastForward.setSprite(new Sprite(MEDIA_URL.concat("play.png")));
@@ -448,6 +441,13 @@ public class Spel extends GameEngine {
 
 				}
 
+			}
+			break;
+			
+		case SCORESCHERM:
+			if (scoreScherm.getTerugKnop().isKnopGeklikt()){
+				state = MENUSCHERM;
+				bepaalScherm();
 			}
 			break;
 		default:

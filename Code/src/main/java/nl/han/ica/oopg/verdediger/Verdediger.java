@@ -1,7 +1,5 @@
 package nl.han.ica.oopg.verdediger;
 
-
-
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.objects.SpriteObject;
 import nl.han.ica.oopg.vijand.Vijand;

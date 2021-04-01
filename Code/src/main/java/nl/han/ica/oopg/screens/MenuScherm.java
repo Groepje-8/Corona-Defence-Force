@@ -5,12 +5,8 @@ import java.util.ArrayList;
 import nl.han.ica.oopg.game.Spel;
 
 public class MenuScherm {
-
-	public Knop instellingenKnop;
-	public Knop startKnop;
 	public ArrayList<Knop> knoppen = new ArrayList<Knop>();
-	private Spel spel;
-	
+
 	private final int xStartKnop = 325;
 	private final int yStartKnop = 430;
 	private final int xInstellingenKnop = 280;
@@ -18,39 +14,16 @@ public class MenuScherm {
 	private final int buttonWidth = 300;
 	private final int buttonHeight = 100;
 
-	private int fontSize, fontSizeInstellingen;
-
 	public MenuScherm(Spel spel) {
-		this.spel = spel;
-		
-		fontSize = 20;
-		fontSizeInstellingen = 15;
-		
-		createInstellingenKnop();
-		createStartKnop();
-		
-		knoppen.add(instellingenKnop);
-		knoppen.add(startKnop);
+		knoppen.add(new Knop(xInstellingenKnop, yInstellingenKnop, buttonWidth, buttonHeight, "Instellingen", spel));
+		knoppen.add(new Knop(xStartKnop, yStartKnop, buttonWidth, buttonHeight, "Start", spel));
 	}
 
-
 	public Knop getInstellingenKnop() {
-		return instellingenKnop;
+		return knoppen.get(0);
 	}
 
 	public Knop getStartKnop() {
-		return startKnop;
-	}
-
-	public ArrayList<Knop> getKnoppen() {
-		return knoppen;
-	}
-
-	public void createInstellingenKnop() {
-		instellingenKnop = new Knop(xInstellingenKnop, yInstellingenKnop, buttonWidth, buttonHeight, "Instellingen", spel);
-	}
-
-	public void createStartKnop() {
-		startKnop = new Knop(xStartKnop, yStartKnop, buttonWidth, buttonHeight, "Start", spel);
+		return knoppen.get(1);
 	}
 }

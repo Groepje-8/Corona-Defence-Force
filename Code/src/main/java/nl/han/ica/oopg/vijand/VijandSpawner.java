@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import nl.han.ica.oopg.alarm.Alarm;
 import nl.han.ica.oopg.alarm.IAlarmListener;
 import nl.han.ica.oopg.game.Spel;
-import nl.han.ica.oopg.tile.Tile;
 
 public class VijandSpawner implements IAlarmListener {
 	
@@ -67,10 +66,10 @@ public class VijandSpawner implements IAlarmListener {
 	}
 	
 	public void beginAlarmGolf() {
-		alarmGolf = new Alarm("Nieuwe Golf", tijdTussenGolven);
+		System.out.println(tijdVolgendeGolf);
+		alarmGolf = new Alarm("Nieuwe Golf", tijdVolgendeGolf);
 	    alarmGolf.addTarget(this);
 	    alarmGolf.start();
-	    beginAlarmVijand();
 	}
 	
 	public void beginAlarmVijand() {
@@ -91,6 +90,7 @@ public class VijandSpawner implements IAlarmListener {
 	}
 	
 	public void volgendeGolf() {
+		tijdVolgendeGolf = tijdTussenGolven;
 		huidigeGolf ++;
 		vijandIndex = 0;
 	}
@@ -131,11 +131,12 @@ public class VijandSpawner implements IAlarmListener {
 		else if (alarmName == "Nieuwe Golf") {
 			volgendeGolf();
 			beginAlarmGolf();
+			beginAlarmVijand();
+			
 			if (huidigeGolf == aantalGolven - 1){
 				alarmGolf.stop();
 				alarmTimer.stop();
 			}
-			tijdVolgendeGolf = tijdTussenGolven;
 		}
 	}
 	
