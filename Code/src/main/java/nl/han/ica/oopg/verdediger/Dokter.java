@@ -2,9 +2,8 @@ package nl.han.ica.oopg.verdediger;
 
 import nl.han.ica.oopg.game.Spel;
 import nl.han.ica.oopg.objects.Sprite;
-import nl.han.ica.oopg.vijand.Vijand;
 
-public class Dokter extends Verdediger implements IAanval{
+public class Dokter extends Verdediger implements IAanval {
 	private static int radius = 150;
 	private static int prijs = 40;
 	private static int schade = 9;
@@ -12,14 +11,16 @@ public class Dokter extends Verdediger implements IAanval{
 	private static String naam = "Dokter";
 
 	public Dokter() {
-		super(new Sprite(Spel.MEDIA_URL.concat("Dokter1.png")), prijs, radius, schade, naam, 0, herlaadTijd);
-		
+		super(new Sprite(Spel.MEDIA_URL.concat("Dokter1.png")), new Sprite(Spel.MEDIA_URL.concat("Dokter2.png")), prijs,
+				radius, schade, naam, 0, herlaadTijd);
+
 	}
+
 	@Override
-	public void schieten(Vijand vijand) {
+	public int schieten() {
 		// TODO Auto-generated method stub
-		vijand.krijgSchade(schade);
 		laatsteAanvaltijd = 0;
+		return schade;
 	}
 
 }

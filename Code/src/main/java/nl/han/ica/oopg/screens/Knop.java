@@ -12,7 +12,7 @@ public class Knop extends GameObject {
 	private int g = 20;
 	private int b = 12;
 	private int alpha = 255;
-	private int backgroundColor = 0;
+
 	
 	private Spel spel;
 

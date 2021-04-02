@@ -2,19 +2,23 @@ package nl.han.ica.oopg.verdediger;
 
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.objects.SpriteObject;
-import nl.han.ica.oopg.vijand.Vijand;
 import processing.core.PImage;
 
-public class Verdediger extends SpriteObject implements IAanval{
+public class Verdediger extends SpriteObject {
 
 	public int prijs, radius, aanvalsKracht;
 	public float x, y;
 	public String naam;
-	public boolean bevroren;
+	public boolean geschoten;
 	public double laatsteAanvaltijd, herlaadTijd;
-	
-	Verdediger(Sprite sprite, int prijs, int radius, int aanvalsKracht, String naam, double laatsteAanvaltijd, double herlaadTijd) {
-		super(sprite);
+	public Sprite normaleSprite;
+	public Sprite aanvalsSprite;
+
+	Verdediger(Sprite currentSprite, Sprite nextSprite, int prijs, int radius, int aanvalsKracht, String naam,
+			double laatsteAanvaltijd, double herlaadTijd) {
+		super(currentSprite);
+		this.normaleSprite = currentSprite;
+		this.aanvalsSprite = nextSprite;
 		this.x = getCenterX();
 		this.y = getCenterY();
 		this.prijs = prijs;
@@ -26,8 +30,11 @@ public class Verdediger extends SpriteObject implements IAanval{
 		resize();
 
 	}
-	public Verdediger(Verdediger copy){
+
+	public Verdediger(Verdediger copy) {
 		super(new Sprite(copy.getImage()));
+		this.normaleSprite = copy.normaleSprite;
+		this.aanvalsSprite = copy.aanvalsSprite;
 		this.x = copy.getCenterX();
 		this.y = copy.getCenterY();
 		this.prijs = copy.prijs;
@@ -36,42 +43,75 @@ public class Verdediger extends SpriteObject implements IAanval{
 		this.naam = copy.naam;
 		this.laatsteAanvaltijd = copy.laatsteAanvaltijd;
 		this.herlaadTijd = copy.herlaadTijd;
-		//resize();
+		// resize();
 	}
-
 
 	public void kopen() {
 
 	}
+
 	private void resize() {
 		super.getImage().resize(90, 90);
-		
+
 	}
+
 	public void resize(int tileSize) {
 		super.getImage().resize(tileSize, tileSize);
 	}
 
-
 	public PImage getSprite() {
 		return super.getImage();
+
 	}
+
+	public void setAanvalsSprite() {
+		super.setSprite(this.aanvalsSprite);
+		// resize();
+	}
+
+	public void setNormaleSprite() {
+		super.setSprite(this.normaleSprite);
+		// resize();
+	}
+
 	public String getNaam() {
 		return this.naam;
 	}
+
 	public int getPrijs() {
 		return this.prijs;
 	}
 
+	public boolean getGeschoten() {
+		return geschoten;
+	}
 
+	public void setGeschoten(Boolean bool) {
+		this.geschoten = bool;
+	}
 
 	@Override
 	public void update() {
 
 	}
-	@Override
-	public void schieten(Vijand vijand) {
-		// TODO Auto-generated method stub
-		
+
+	public void verdedigersAnimatie() {
+		System.out.println("jeej");
 	}
+
+	public void animeer(Sprite sprite) {
+
+	}
+
+	
+
+//	public void verdedigersAnimatie() {
+//		if (laatsteAanvaltijd < 4) {
+//			this.setSprite(new Sprite(Spel.MEDIA_URL.concat("PolitieAgent2.png")));
+//		} else {
+//			this.setSprite(new Sprite(Spel.MEDIA_URL.concat("PolitieAgent2.png")));
+//
+//		}
+//	}
 
 }

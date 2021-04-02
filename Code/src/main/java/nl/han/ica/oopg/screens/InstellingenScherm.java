@@ -1,13 +1,12 @@
 package nl.han.ica.oopg.screens;
 
 import java.util.ArrayList;
-import nl.han.ica.oopg.sound.Sound;
-import nl.han.ica.oopg.engine.*;
 import nl.han.ica.oopg.game.Spel;
 
 public class InstellingenScherm {
-	public boolean isGeluidAan;
-	public boolean isMuziekAan;
+	public Knop muziekKnop;
+	public Knop geluidsKnop;
+	public Knop backKnop;
 	public ArrayList<Knop> knoppen = new ArrayList<Knop>();
 	
 	private final int xGeluidKnop = 260;
@@ -18,31 +17,37 @@ public class InstellingenScherm {
 	private final int yBackKnop = 508;
 	
 	private final int buttonWidth = 300;
-	private final int buttonHeight = 120;
+	private final int buttonHeight = 90;
+	private Spel spel;
+	private SoundHandler soundHandler;
 
-	public InstellingenScherm(Spel spel) {
-		
-		knoppen.add(new Knop(xGeluidKnop, yGeluidKnop, buttonWidth, buttonHeight, "Zet Geluid " + !isGeluidAan, spel));
-		knoppen.add(new Knop(xMuziekKnop, yMuziekKnop, buttonWidth, buttonHeight, "Zet Muziek " + !isMuziekAan, spel));
-		knoppen.add(new Knop(xBackKnop, yBackKnop, buttonWidth, buttonHeight, "Ga Terug", spel));
+	public InstellingenScherm(Spel spel ,SoundHandler soundHandler) {
+		this.soundHandler = soundHandler;
+		this.spel = spel;
+		createMuziekKnop();
+		createGeluidKnop();
+		createBackKnop();
+		knoppen.add(geluidsKnop);
+		knoppen.add(muziekKnop);
+		knoppen.add(backKnop);
 	}
 
-	public void setGeluid() {
-		isGeluidAan = !isGeluidAan;
+	
+
+	public void createGeluidKnop() {
+		geluidsKnop = new Knop(xGeluidKnop, yGeluidKnop, buttonWidth, buttonHeight, soundHandler.geluidTekst, spel);
+		muziekKnop.setForeColor(146, 20, 12, 255);
 	}
 
-	public void setMuziek() {
-		isMuziekAan = !isMuziekAan;
+	public void createMuziekKnop() {
+		muziekKnop = new Knop(xMuziekKnop, yMuziekKnop, buttonWidth, buttonHeight,soundHandler.muziekTekst, spel);
+		muziekKnop.setForeColor(146, 20, 12, 255);
 	}
 
-	public boolean getGeluid() {
-		return isGeluidAan;
+	public void createBackKnop(){
+		backKnop = new Knop(xBackKnop, yBackKnop, buttonWidth, buttonHeight,"Terug", spel);
+		backKnop.setForeColor(146, 20, 12, 255);
 	}
-
-	public boolean getMuziek() {
-		return isMuziekAan;
-	}
-
 	public Knop getGeluidKnop() {
 		return knoppen.get(0);
 	}
@@ -54,19 +59,13 @@ public class InstellingenScherm {
 	public Knop getBackKnop() {
 		return knoppen.get(2);
 	}
-	
-	public void soundHandler(GameEngine engine, Sound sound) {
-		if (!isMuziekAan) {
-			if (!sound.isPlaying()) {
-				sound.play(); // maak looping als hij na 1x stopt (nog niet getest)
-				setMuziek();
-			}
-		} else {
-			sound.pause();
-			setMuziek();
 
-		}
-		getMuziekKnop().setText("Zet Muziek " + !isMuziekAan);
+	public ArrayList<Knop> getKnoppen() {
+		return knoppen;
+	}
+
+	public void setMuziekKnopTekst() {	
+		muziekKnop.setText(soundHandler.muziekTekst);
 
 	}
 }

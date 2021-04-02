@@ -35,7 +35,7 @@ public class BuildScreen {
 		
 		Buildable politieAgentBuildable = new Buildable(new Sprite(Spel.MEDIA_URL.concat("PolitieAgent1.png")),politieAgent);
 		Buildable dokterBuildable = new Buildable(new Sprite(Spel.MEDIA_URL.concat("Dokter1.png")),dokter);
-		Buildable waterkanonBuildable = new Buildable(new Sprite(Spel.MEDIA_URL.concat("WaterKannon1.png")),waterkanon);
+		Buildable waterkanonBuildable = new Buildable(new Sprite(Spel.MEDIA_URL.concat("WaterKanon1.png")),waterkanon);
 		Buildable sniperBuildable = new Buildable(new Sprite(Spel.MEDIA_URL.concat("Sniper1.png")),sniper);
 		
 		Verdedigers.add(politieAgent);

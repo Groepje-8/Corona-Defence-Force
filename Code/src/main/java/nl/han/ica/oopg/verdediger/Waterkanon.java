@@ -2,7 +2,6 @@ package nl.han.ica.oopg.verdediger;
 
 import nl.han.ica.oopg.game.Spel;
 import nl.han.ica.oopg.objects.Sprite;
-import nl.han.ica.oopg.vijand.Vijand;
 
 public class Waterkanon extends Verdediger implements IAanval {
 	private static int radius = 250;
@@ -12,15 +11,16 @@ public class Waterkanon extends Verdediger implements IAanval {
 	private static String naam = "Waterkanon";
 
 	public Waterkanon() {
-		super(new Sprite(Spel.MEDIA_URL.concat("WaterKannon1.png")), prijs, radius, schade, naam, 0, herlaadTijd);
+		super(new Sprite(Spel.MEDIA_URL.concat("WaterKanon1.png")),
+				new Sprite(Spel.MEDIA_URL.concat("WaterKanon2.png")), prijs, radius, schade, naam, 0, herlaadTijd);
 
 	}
 
 	@Override
-	public void schieten(Vijand vijand) {
+	public int schieten() {
 		// TODO Auto-generated method stub
-		vijand.krijgSchade(schade);
 		laatsteAanvaltijd = 0;
+		return schade;
 	}
 
 }

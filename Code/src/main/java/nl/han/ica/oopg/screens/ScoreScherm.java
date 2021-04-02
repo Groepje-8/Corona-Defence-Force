@@ -3,7 +3,7 @@ package nl.han.ica.oopg.screens;
 import java.util.ArrayList;
 
 import nl.han.ica.oopg.game.Spel;
-import nl.han.ica.oopg.objects.*;
+
 
 public class ScoreScherm {
 	private ArrayList<Knop> knoppen = new ArrayList<>();
