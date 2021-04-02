@@ -27,8 +27,8 @@ import nl.han.ica.oopg.vijand.Vijand;
 @SuppressWarnings("serial")
 public class Spel extends GameEngine {
 
-	// public static String MEDIA_URL = "src/main/java/media/";
-	public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
+	public static String MEDIA_URL = "src/main/java/media/";
+	//public static String MEDIA_URL = "C:\\\\Users\\\\Joria\\\\Documents\\\\GitHub\\\\Corona-Defence-Force\\\\Code\\\\src\\\\main\\\\java\\\\media\\";
 
 	private final int MENUSCHERM = 0;
 	private final int INSTELLINGENSCHERM = 1;
@@ -71,8 +71,6 @@ public class Spel extends GameEngine {
 
 	@Override
 	public void setupGame() {
-
-		
 
 		instellingenScherm = new InstellingenScherm(this, soundHandler);
 		menuScherm = new MenuScherm(this);
