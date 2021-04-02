@@ -369,6 +369,7 @@ public class Spel extends GameEngine {
 		case INSTELLINGENSCHERM:
 			if (instellingenScherm.getMuziekKnop().isKnopGeklikt()) {
 				soundHandler.playMusic(this, backgroundSound);
+				instellingenScherm.setMuziekKnopTekst();
 			}
 			if (instellingenScherm.getGeluidKnop().isKnopGeklikt()) {
 				
