@@ -147,7 +147,7 @@ public class Spel extends GameEngine {
 			
 			view.setBackground(loadImage(MEDIA_URL.concat("SpelBackground.png")));
 			geld = 100;
-			levens = 10;
+			levens = 1;
 			
 			initializeTileMap();
 			initializeVijandSpawner();
@@ -220,10 +220,14 @@ public class Spel extends GameEngine {
 	}
 	
 	public void initializeVijandSpawner() {
+		// 0 = Relschopper, 1 = Antivaxmoeder, 2 = Urker, 3 = FrangeLans, 4 = Berry Thiaudet.
 		int vijandMap[][] = { 
-				{ 0, 1, 1, 1, 0 }, 
-				{ 0, 0, 0, 0, 0, 1 }, 
-				{ 0, 0, 0, 0, 0 } };
+				{ 0, 0, 0, 0, 1 }, { 0, 1, 0, 1, 0 }, { 2, 1, 0, 0, 1 }, { 0, 0, 0, 1, 0, 0, 0}, { 2, 0, 2, 0, 2 },
+				{ 1, 3, 1}, { 0, 2, 1, 2, 0 }, { 1, 3, 1, 3, 1 }, { 0, 1, 2, 3}, { 2, 2, 2, 0, 1},
+				{ 4, 0, 2, 0, 2}, { 0, 2, 0, 2, 0}, { 1, 3, 2, 2, 1}, { 0, 1, 1, 2, 1}, { 2, 2, 0, 0, 1},
+				{ 4, 3, 0, 0, 0}, { 2, 1, 2, 0, 0}, { 0, 1, 2, 4, 0}, { 1, 0, 0, 0, 1}, { 2, 3, 4, 0, 0},
+				{ 4, 3, 2, 2, 2}, { 1, 1, 3, 2, 2, 1, 2}, { 4, 3, 2, 1, 2, 1, 2}, { 3, 2, 3, 2, 1, 0, 1}, { 4, 3, 2, 1, 0, 1, 2, 3, 4}
+			};
 		int vijandSpawnX = 15;
 		int vijandSpawnY = 2;
 		int tijdTussenVijanden = 1;
@@ -235,9 +239,6 @@ public class Spel extends GameEngine {
 	private void showGameDetailDashboard() {
 		pause = new Logo(new Sprite(MEDIA_URL.concat("pause.png")));
 		addGameObject(pause, 10, 640);
-		
-		fastForward = new Logo(new Sprite(MEDIA_URL.concat("fastForward.png")));
-		addGameObject(fastForward, 90, 640);
 		
 		levensTO = new TextObject("Levens = " + levens, 22);
 		levensTO.setForeColor(23, 13, 29, 255);
@@ -305,7 +306,7 @@ public class Spel extends GameEngine {
 	
 	private void isGameOver() {
 		if(levens < 1 || vijandSpawner.isSpelKlaar()) {
-			this.pauseGame();
+			vijandSpawner.pauseAlarms();
 			state = SCORESCHERM;
 			bepaalScherm();
 		}
@@ -385,28 +386,16 @@ public class Spel extends GameEngine {
 			if (spelScherm.getPauseKnop().isKnopGeklikt()){
 				if (getThreadState()) {
 					resumeGame();
+					vijandSpawner.resumeAlarms();
 					pause.setSprite(new Sprite(MEDIA_URL.concat("pause.png")));
 				}
 				else {
 					pauseGame();
+					vijandSpawner.pauseAlarms();
 					pause.setSprite(new Sprite(MEDIA_URL.concat("play.png")));
 				}
 			}
-
-			if (spelScherm.getFastForwardKnop().isKnopGeklikt()){
-				if (getGameSpeed() == 60){
-					setGameSpeed(120);
-					fastForward.setSprite(new Sprite(MEDIA_URL.concat("play.png")));
-				}
-				else {
-					setGameSpeed(60);
-					fastForward.setSprite(new Sprite(MEDIA_URL.concat("fastForward.png")));
-				}
-			}
 			
-			for (Verdediger i : buildScreen.Verdedigers) {
-				System.out.println(i.getX());
-			}
 			for (Buildable i : buildScreen.Buildables) {
 				
 				if (mouseX > i.getX() && mouseX < (i.getX() + i.getWidth()) && mouseY > i.getY()
@@ -446,6 +435,7 @@ public class Spel extends GameEngine {
 			
 		case SCORESCHERM:
 			if (scoreScherm.getTerugKnop().isKnopGeklikt()){
+				vijandSpawner = null;
 				state = MENUSCHERM;
 				bepaalScherm();
 			}

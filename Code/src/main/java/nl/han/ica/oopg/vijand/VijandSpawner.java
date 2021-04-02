@@ -59,27 +59,22 @@ public class VijandSpawner implements IAlarmListener {
 		return false;
 	}
 	
-	public void beginEersteGolf() {
+	public void beginAlarmGolf() {
 		alarmGolf = new Alarm("Nieuwe Golf", tijdTussenGolven);
 	    alarmGolf.addTarget(this);
 	    alarmGolf.start();
 	}
 	
-	public void beginAlarmGolf() {
-		System.out.println(tijdVolgendeGolf);
-		alarmGolf = new Alarm("Nieuwe Golf", tijdVolgendeGolf);
-	    alarmGolf.addTarget(this);
-	    alarmGolf.start();
-	}
-	
 	public void beginAlarmVijand() {
-		if (vijandIndex == vijandMap[huidigeGolf].length) {
-			alarmVijand.stop();
-		}
-		else {
-			alarmVijand = new Alarm("Nieuwe Vijand", tijdTussenVijanden);
-		    alarmVijand.addTarget(this);
-		    alarmVijand.start();
+		if (huidigeGolf >= 0) {
+			if (vijandIndex == vijandMap[huidigeGolf].length) {
+				alarmVijand.stop();
+			}
+			else {
+				alarmVijand = new Alarm("Nieuwe Vijand", tijdTussenVijanden);
+			    alarmVijand.addTarget(this);
+			    alarmVijand.start();
+			}
 		}
 	}
 	
@@ -96,10 +91,14 @@ public class VijandSpawner implements IAlarmListener {
 	}
 	
 	private void spawnVijand() {
-		Vijand nieuweVijand = createVijand(vijandMap[huidigeGolf][vijandIndex]);
-		vijanden.add(nieuweVijand);
-		spel.addGameObject(nieuweVijand, vijandSpawnX, vijandSpawnY);
-		vijandIndex++;
+		if (huidigeGolf >= 0) {
+			if (vijandIndex < vijandMap[huidigeGolf].length) {
+				Vijand nieuweVijand = createVijand(vijandMap[huidigeGolf][vijandIndex]);
+				vijanden.add(nieuweVijand);
+				spel.addGameObject(nieuweVijand, vijandSpawnX, vijandSpawnY);
+				vijandIndex++;
+			}
+		}
 	}
 	
 	private Vijand createVijand(int vijandTypeIndex){
@@ -138,6 +137,27 @@ public class VijandSpawner implements IAlarmListener {
 				alarmTimer.stop();
 			}
 		}
+	}
+	
+	public void pauseAlarms() {
+		alarmGolf.stop();
+		if (alarmVijand != null) {
+			alarmVijand.stop();
+		}
+		alarmTimer.stop();
+	}
+	
+	public void resumeAlarms() {
+		
+		alarmGolf = new Alarm("Nieuwe Golf", tijdVolgendeGolf);
+	    alarmGolf.addTarget(this);
+	    alarmGolf.start();
+	    if (tijdVolgendeGolf > 10) {
+		    alarmVijand = new Alarm("Nieuwe Vijand", tijdTussenVijanden);
+			alarmVijand.addTarget(this);
+			alarmVijand.start();
+	    }
+	    beginAlarmTimer();
 	}
 	
 	public ArrayList<Vijand> getVijanden(){
