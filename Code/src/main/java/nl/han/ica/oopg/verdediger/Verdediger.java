@@ -46,10 +46,6 @@ public class Verdediger extends SpriteObject {
 		// resize();
 	}
 
-	public void kopen() {
-
-	}
-
 	private void resize() {
 		super.getImage().resize(90, 90);
 
@@ -94,24 +90,5 @@ public class Verdediger extends SpriteObject {
 	public void update() {
 
 	}
-
-	public void verdedigersAnimatie() {
-		System.out.println("jeej");
-	}
-
-	public void animeer(Sprite sprite) {
-
-	}
-
-	
-
-//	public void verdedigersAnimatie() {
-//		if (laatsteAanvaltijd < 4) {
-//			this.setSprite(new Sprite(Spel.MEDIA_URL.concat("PolitieAgent2.png")));
-//		} else {
-//			this.setSprite(new Sprite(Spel.MEDIA_URL.concat("PolitieAgent2.png")));
-//
-//		}
-//	}
 
 }
